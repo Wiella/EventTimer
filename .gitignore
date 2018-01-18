@@ -1,8 +1,3 @@
-# Build artifacts
-/exe/EventTimer.exe
-/exe/EventTimer-x32.exe
-/exe/EventTimer-x64.exe
-
 # Compile output
 /target/
 /out/
