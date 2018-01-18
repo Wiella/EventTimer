@@ -38,6 +38,16 @@ import java.util.List;
 public final class DhuumEncounter extends AbstractEncounter implements Icons, Colors, Fonts, SoundEffects
 {
     /**
+     * todo Sub-encounter for last phase?
+     *
+     * Last phase: 1m 45s
+     * Seals warning: 1m 15s (~5s going up, ~25s catching balls)
+     * DPS phases: 20s
+     * Seals: 7~8s
+     * Enrage: 0s
+     */
+
+    /**
      * Settings group name.
      * Can be used to flush previous settings of this encounter.
      */
