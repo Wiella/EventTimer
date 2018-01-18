@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Class-Path: jlayer-1.0.1.jar weblaf-core-1.2.9-20180112.133427-158.jar
+  weblaf-ui-1.2.9-20180112.133723-150.jar filters-2.0.235.jar java-ima
+ ge-scaling-0.8.6.jar xstream-1.4.9.jar jna-4.2.1.jar jkeymaster-1.2.j
+ ar slf4j-simple-1.7.21.jar svg-salamander-1.0.jar rsyntaxtextarea-2.6
+ .0.jar slf4j-api-1.7.13.jar jericho-html-3.3.jar
+Main-Class: com.event.timer.EventTimer
+

@@ -1,0 +1,133 @@
+<skin xmlns="http://weblookandfeel.com/XmlSkinExtension">
+
+    <!-- Extension settings -->
+    <id>com.event.timer</id>
+    <extends>weblaf.dark.skin</extends>
+
+    <!-- Announcement label -->
+    <style type="styledlabel" id="announcement" extends="shadow">
+        <painter>
+            <decorations>
+                <decoration states="disabled">
+                    <LabelLayout>
+                        <LabelIcon opacity="0.5" />
+                        <StyledLabelText opacity="0.5" />
+                    </LabelLayout>
+                </decoration>
+            </decorations>
+        </painter>
+    </style>
+
+    <!-- Customized separator -->
+    <style type="separator" id="customized">
+        <painter>
+            <decorations overwrite="true">
+                <decoration>
+                    <SeparatorStripes>
+                        <Stripe>
+                            <color fraction="0.0">10,10,10,5</color>
+                            <color fraction="0.5">10,10,10</color>
+                            <color fraction="1.0">10,10,10,5</color>
+                        </Stripe>
+                    </SeparatorStripes>
+                </decoration>
+            </decorations>
+        </painter>
+    </style>
+
+    <!-- Customized toggle button -->
+    <style type="togglebutton" id="customized" padding="5,15,5,15">
+        <painter>
+            <decorations>
+                <decoration>
+                    <ButtonLayout>
+                        <StyledButtonText constraints="text" color="245,245,245" shadow="true" shadowColor="black" shadowSize="2" />
+                    </ButtonLayout>
+                </decoration>
+            </decorations>
+        </painter>
+    </style>
+
+    <!-- Customized button -->
+    <style type="button" id="customized" padding="5,15,5,15">
+        <painter>
+            <decorations>
+                <decoration>
+                    <ButtonLayout>
+                        <StyledButtonText constraints="text" color="245,245,245" shadow="true" shadowColor="black" shadowSize="2" />
+                    </ButtonLayout>
+                </decoration>
+            </decorations>
+        </painter>
+    </style>
+
+    <!-- Customized checkbox -->
+    <style type="checkbox" id="customized" padding="5,10,5,10">
+        <painter>
+            <decorations>
+                <decoration>
+                    <ButtonLayout>
+                        <StyledButtonText constraints="text" color="245,245,245" shadow="true" shadowColor="black" shadowSize="2" />
+                    </ButtonLayout>
+                </decoration>
+            </decorations>
+
+            <!-- Check state painter -->
+            <checkStatePainter>
+                <decorations>
+                    <decoration size="24,24" />
+                    <decoration states="checked">
+                        <CheckIcon stroke="basic;4" />
+                    </decoration>
+                </decorations>
+            </checkStatePainter>
+
+        </painter>
+    </style>
+
+    <!-- Event Timer Dialog -->
+    <style type="rootpane" id="timer-dialog" extends="dialog-transparent">
+
+        <!-- Title panel -->
+        <style type="panel" id="title" extends="transparent" margin="10,10,0,10" padding="0,10,0,10">
+            <component class="com.alee.laf.panel.WebPanel">
+                <preferredWidth>400</preferredWidth>
+            </component>
+            <painter>
+                <decorations>
+                    <decoration>
+                        <WebShape round="5" />
+                        <GradientBackground from="0,0" to="0,1">
+                            <color>227,157,45,25</color>
+                            <color>227,157,45,125</color>
+                        </GradientBackground>
+                    </decoration>
+                    <decoration states="transparent">
+                        <ColorBackground color="transparent" />
+                    </decoration>
+                </decorations>
+            </painter>
+
+            <!-- Settings button -->
+            <style type="button" id="settings" extends="undecorated" />
+
+        </style>
+
+        <!-- Content panel -->
+        <style type="panel" id="content-area" extends="transparent" margin="10" padding="10">
+            <painter>
+                <decorations>
+                    <decoration>
+                        <WebShape round="5" />
+                        <ColorBackground color="0,0,0,80" />
+                    </decoration>
+                    <decoration states="transparent">
+                        <ColorBackground color="transparent" />
+                    </decoration>
+                </decorations>
+            </painter>
+        </style>
+
+    </style>
+
+</skin>

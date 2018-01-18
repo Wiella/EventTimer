@@ -1,0 +1,26 @@
+<component name="ArtifactManager">
+  <artifact name="EventTimer:jar">
+    <output-path>$PROJECT_DIR$/jar</output-path>
+    <root id="root">
+      <element id="archive" name="EventTimer.jar">
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
+        </element>
+        <element id="module-output" name="EventTimer" />
+      </element>
+      <element id="library" level="project" name="Maven: javazoom:jlayer:1.0.1" />
+      <element id="library" level="project" name="Maven: com.weblookandfeel:weblaf-core:1.2.9-SNAPSHOT" />
+      <element id="library" level="project" name="Maven: com.weblookandfeel:weblaf-ui:1.2.9-SNAPSHOT" />
+      <element id="library" level="project" name="Maven: com.jhlabs:filters:2.0.235" />
+      <element id="library" level="project" name="Maven: com.mortennobel:java-image-scaling:0.8.6" />
+      <element id="library" level="project" name="Maven: com.thoughtworks.xstream:xstream:1.4.9" />
+      <element id="library" level="project" name="Maven: net.java.dev.jna:jna:4.2.1" />
+      <element id="library" level="project" name="Maven: com.github.tulskiy:jkeymaster:1.2" />
+      <element id="library" level="project" name="Maven: org.slf4j:slf4j-simple:1.7.21" />
+      <element id="library" level="project" name="Maven: com.kitfox.svg:svg-salamander:1.0" />
+      <element id="library" level="project" name="Maven: com.fifesoft:rsyntaxtextarea:2.6.0" />
+      <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.13" />
+      <element id="library" level="project" name="Maven: net.htmlparser.jericho:jericho-html:3.3" />
+    </root>
+  </artifact>
+</component>
