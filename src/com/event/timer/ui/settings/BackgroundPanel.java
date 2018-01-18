@@ -1,9 +1,11 @@
 package com.event.timer.ui.settings;
 
 import com.alee.laf.panel.WebPanel;
+import com.alee.managers.settings.SettingsManager;
 import com.alee.managers.style.StyleId;
 import com.alee.painter.decoration.DecorationUtils;
 import com.alee.painter.decoration.Stateful;
+import com.alee.utils.CollectionUtils;
 
 import java.util.List;
 
@@ -33,8 +35,8 @@ public final class BackgroundPanel extends WebPanel implements Stateful
     @Override
     public List<String> getStates ()
     {
-        //                return !SettingsManager.get ( settingsKey, true ) ? CollectionUtils.asList ( "transparent" ) : null;
-        return null;
+        final boolean transparent = settingsKey != null && !SettingsManager.get ( settingsKey, true );
+        return transparent ? CollectionUtils.asList ( "transparent" ) : null;
     }
 
     /**
