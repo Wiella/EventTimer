@@ -157,6 +157,11 @@ public abstract class SettingsDialog extends WebDialog<SettingsDialog> implement
         content.add ( tabsContent );
     }
 
+    /**
+     * Returns {@link DocumentData} for the basic settings panel.
+     *
+     * @return {@link DocumentData} for the basic settings panel
+     */
     private DocumentData createBasicSettings ()
     {
         final WebPanel content = new WebPanel ( StyleId.panelTransparent, new VerticalFlowLayout ( 0, 5 ) );

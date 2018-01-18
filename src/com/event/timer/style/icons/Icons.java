@@ -48,6 +48,8 @@ public interface Icons
     public static final Icon checkpoint32 = createPNG ( "checkpoint.png", 32 );
     public static final Icon flag32 = createPNG ( "flag.png", 32 );
     public static final Icon boss32 = createPNG ( "boss.png", 32 );
+    public static final Icon downed32 = createPNG ( "downed.png", 32 );
+    public static final Icon downstate32 = createPNG ( "downstate.png", 32 );
     public static final Icon waypoint32 = createPNG ( "waypoint.png", 32 );
     public static final Icon dragon32 = createPNG ( "dragon.png", 32 );
     public static final Icon enrage32 = createPNG ( "enrage.png", 32 );
@@ -78,6 +80,8 @@ public interface Icons
             checkpoint32,
             flag32,
             boss32,
+            downed32,
+            downstate32,
             waypoint32,
             dragon32,
             enrage32,

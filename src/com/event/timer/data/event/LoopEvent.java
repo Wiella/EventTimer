@@ -36,21 +36,26 @@ public final class LoopEvent extends AbstractEvent
     /**
      * Constructs new {@link LoopEvent}.
      *
+     * @param id          unique {@link Event} identifier
+     * @param encounter   {@link Encounter} for this {@link Event}
      * @param start       remaining encounter time when first {@link Event} occurs
      * @param delay       event repeat delay
      * @param advance     delay for announcement in advance
      * @param description {@link Event} description
      * @param sound       sound effect for this {@link Event}
      */
-    public LoopEvent ( final long start, final long delay, final long advance,
+    public LoopEvent ( final String id, final Encounter encounter,
+                       final long start, final long delay, final long advance,
                        final Function<Integer, String> description, final SoundEffect sound )
     {
-        this ( start, delay, 0L, advance, cycle -> Icons.empty32, description, sound );
+        this ( id, encounter, start, delay, 0L, advance, cycle -> Icons.empty32, description, sound );
     }
 
     /**
      * Constructs new {@link LoopEvent}.
      *
+     * @param id          unique {@link Event} identifier
+     * @param encounter   {@link Encounter} for this {@link Event}
      * @param start       remaining encounter time when first {@link Event} occurs
      * @param delay       event repeat delay
      * @param advance     delay for announcement in advance
@@ -58,15 +63,18 @@ public final class LoopEvent extends AbstractEvent
      * @param description {@link Event} description
      * @param sound       sound effect for this {@link Event}
      */
-    public LoopEvent ( final long start, final long delay, final long advance,
+    public LoopEvent ( final String id, final Encounter encounter,
+                       final long start, final long delay, final long advance,
                        final Function<Integer, Icon> icon, final Function<Integer, String> description, final SoundEffect sound )
     {
-        this ( start, delay, 0L, advance, icon, description, sound );
+        this ( id, encounter, start, delay, 0L, advance, icon, description, sound );
     }
 
     /**
      * Constructs new {@link LoopEvent}.
      *
+     * @param id          unique {@link Event} identifier
+     * @param encounter   {@link Encounter} for this {@link Event}
      * @param start       remaining encounter time when first {@link Event} occurs
      * @param delay       event repeat delay
      * @param end         remaining encounter time after which {@link Event} doesn't occur anymore
@@ -74,15 +82,18 @@ public final class LoopEvent extends AbstractEvent
      * @param description {@link Event} description
      * @param sound       sound effect for this {@link Event}
      */
-    public LoopEvent ( final long start, final long delay, final long end, final long advance,
+    public LoopEvent ( final String id, final Encounter encounter,
+                       final long start, final long delay, final long end, final long advance,
                        final Function<Integer, String> description, final SoundEffect sound )
     {
-        this ( start, delay, end, advance, cycle -> Icons.empty32, description, sound );
+        this ( id, encounter, start, delay, end, advance, cycle -> Icons.empty32, description, sound );
     }
 
     /**
      * Constructs new {@link LoopEvent}.
      *
+     * @param id          unique {@link Event} identifier
+     * @param encounter   {@link Encounter} for this {@link Event}
      * @param start       remaining encounter time when first {@link Event} occurs
      * @param delay       event repeat delay
      * @param end         remaining encounter time after which {@link Event} doesn't occur anymore
@@ -91,24 +102,25 @@ public final class LoopEvent extends AbstractEvent
      * @param description {@link Event} description
      * @param sound       sound effect for this {@link Event}
      */
-    public LoopEvent ( final long start, final long delay, final long end, final long advance,
+    public LoopEvent ( final String id, final Encounter encounter,
+                       final long start, final long delay, final long end, final long advance,
                        final Function<Integer, Icon> icon, final Function<Integer, String> description, final SoundEffect sound )
     {
-        super ( icon, description, advance, sound );
+        super ( id, encounter, icon, description, advance, sound );
         this.start = start;
         this.end = end;
         this.delay = delay;
     }
 
     @Override
-    public List<Announcement> announcements ( final Encounter encounter )
+    public List<Announcement> announcements ()
     {
         final List<Announcement> announcements = new ArrayList<> ( 3 );
         long time = start;
         int cycle = 0;
         while ( time >= end )
         {
-            announcements.add ( new Announcement ( time, cycle, icon ( cycle ), description ( cycle ), this ) );
+            announcements.add ( new Announcement ( time, icon ( cycle ), description ( cycle ), this ) );
             time -= delay;
             cycle++;
         }

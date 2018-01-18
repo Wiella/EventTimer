@@ -16,6 +16,11 @@ import java.util.stream.Collectors;
 public abstract class AbstractEncounter implements Encounter
 {
     /**
+     * Unique {@link Encounter} identifier.
+     */
+    private final String id;
+
+    /**
      * {@link Encounter} duration.
      */
     private final long duration;
@@ -28,14 +33,22 @@ public abstract class AbstractEncounter implements Encounter
     /**
      * Constructs new {@link AbstractEncounter}.
      *
+     * @param id       unique {@link Encounter} identifier
      * @param duration {@link Encounter} duration
      * @param name     {@link Encounter} name
      */
-    public AbstractEncounter ( final long duration, final String name )
+    public AbstractEncounter ( final String id, final long duration, final String name )
     {
         super ();
+        this.id = id;
         this.duration = duration;
         this.name = name;
+    }
+
+    @Override
+    public String id ()
+    {
+        return id;
     }
 
     @Override
@@ -54,7 +67,7 @@ public abstract class AbstractEncounter implements Encounter
     public List<Announcement> announcements ()
     {
         return events ().stream ()
-                .flatMap ( event -> event.announcements ( AbstractEncounter.this ).stream () )
+                .flatMap ( event -> event.announcements ().stream () )
                 .sorted ( new AnnouncementComparator () )
                 .collect ( Collectors.toList () );
     }

@@ -9,6 +9,7 @@ import com.alee.laf.separator.WebSeparator;
 import com.alee.laf.window.WebDialog;
 import com.alee.managers.settings.processors.WindowSettings;
 import com.alee.managers.style.StyleId;
+import com.alee.utils.CollectionUtils;
 import com.alee.utils.SwingUtils;
 import com.alee.utils.parsing.DurationUnits;
 import com.event.timer.data.announcement.Announcement;
@@ -304,9 +305,10 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
             SwingUtils.invokeLater ( () -> settings.setEnabled ( false ) );
 
             /**
-             * Updating running encounter and announcements.
+             * Collecting {@link Announcement}s.
+             * We have to filter out disabled ones to hide them in the timer.
              */
-            this.announcements = encounter.announcements ();
+            this.announcements = CollectionUtils.filter ( encounter.announcements (), Announcement::enabled );
 
             /**
              * Marking start time.

@@ -17,6 +17,8 @@ public final class BackgroundPanel extends WebPanel implements Stateful
 {
     /**
      * Background setting key.
+     * Note that this parameter is not received in the first {@link #getStates()} calls due to them being made in super constructors.
+     * Although that is not important as the style (and states) are further updated when component becomes visible.
      */
     private final String settingsKey;
 
@@ -30,6 +32,7 @@ public final class BackgroundPanel extends WebPanel implements Stateful
     {
         super ( id );
         this.settingsKey = settingKey;
+        updateStates ();
     }
 
     @Override

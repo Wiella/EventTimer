@@ -15,6 +15,13 @@ import java.util.List;
 public interface Encounter
 {
     /**
+     * Returns unique {@link Encounter} identifier.
+     *
+     * @return unique {@link Encounter} identifier
+     */
+    public String id ();
+
+    /**
      * Returns {@link Encounter} duration.
      *
      * @return {@link Encounter} duration
@@ -41,6 +48,13 @@ public interface Encounter
      * @return all {@link Announcement}s for this {@link Encounter}
      */
     public List<Announcement> announcements ();
+
+    /**
+     * Returns unique settings group for this {@link Encounter}.
+     *
+     * @return unique settings group for this {@link Encounter}
+     */
+    public String settingsGroup ();
 
     /**
      * Returns settings panel for this {@link Encounter}.

@@ -4,6 +4,7 @@ import com.event.timer.data.announcement.Announcement;
 import com.event.timer.data.encounter.Encounter;
 import com.event.timer.style.sound.SoundEffect;
 
+import javax.swing.*;
 import java.util.List;
 
 /**
@@ -14,6 +15,27 @@ import java.util.List;
 
 public interface Event
 {
+    /**
+     * Returns unique {@link Event} identifier.
+     *
+     * @return unique {@link Event} identifier
+     */
+    public String id ();
+
+    /**
+     * Returns {@link Icon} for this {@link Event}.
+     *
+     * @return {@link Icon} for this {@link Event}
+     */
+    public Icon icon ();
+
+    /**
+     * Returns {@link Encounter} for this {@link Event}.
+     *
+     * @return {@link Encounter} for this {@link Event}
+     */
+    public Encounter encounter ();
+
     /**
      * Returns delay used for displaying {@link Announcement}s in advance.
      *
@@ -29,10 +51,9 @@ public interface Event
     public SoundEffect sound ();
 
     /**
-     * Returns {@link Announcement} for this event for the specified encounter.
+     * Returns {@link Announcement} for this event.
      *
-     * @param encounter {@link Encounter}
-     * @return {@link Announcement} for this event for the specified encounter
+     * @return {@link Announcement} for this event
      */
-    public List<Announcement> announcements ( Encounter encounter );
+    public List<Announcement> announcements ();
 }

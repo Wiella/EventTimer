@@ -17,6 +17,12 @@ import com.event.timer.ui.EventTimerDialog;
 public final class EventTimer
 {
     /**
+     * Settings group name.
+     * Can be used to flush previous timer settings.
+     */
+    private static final String group = "EventTimer.v1";
+
+    /**
      * Launches {@link EventTimer}.
      */
     public static void main ( final String[] args )
@@ -27,14 +33,15 @@ public final class EventTimer
                 /**
                  * L&F installation.
                  */
+                WebLookAndFeel.setForceSingleEventsThread ( true );
                 WebLookAndFeel.install ( DarkSkin.class );
                 StyleManager.addExtensions ( new EventTimerExtension () );
 
                 /**
                  * Manager settings.
                  */
-                SettingsManager.setDefaultSettingsGroup ( "Announcer" );
                 SettingsManager.setDefaultSettingsDirName ( ".EventTimer" );
+                SettingsManager.setDefaultSettingsGroup ( group );
 
                 /**
                  * Application.
