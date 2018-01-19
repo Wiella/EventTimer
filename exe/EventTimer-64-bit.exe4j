@@ -34,8 +34,8 @@
             <archive location="../jar/slf4j-api-1.7.21.jar" failOnError="true" />
             <archive location="../jar/slf4j-simple-1.7.21.jar" failOnError="true" />
             <archive location="../jar/svg-salamander-1.0.jar" failOnError="true" />
-            <archive location="../jar/weblaf-core-1.2.9-20180118.113214-167.jar" failOnError="true" />
-            <archive location="../jar/weblaf-ui-1.2.9-20180118.113513-159.jar" failOnError="true" />
+            <archive location="../jar/weblaf-core-1.2.9-20180119.102511-168.jar" failOnError="true" />
+            <archive location="../jar/weblaf-ui-1.2.9-20180119.102826-160.jar" failOnError="true" />
             <archive location="../jar/xstream-1.4.9.jar" failOnError="true" />
         </classPath>
         <modulePath />

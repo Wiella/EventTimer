@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: com.weblookandfeel:weblaf-ui:1.2.9-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/weblookandfeel/weblaf-ui/1.2.9-SNAPSHOT/weblaf-ui-1.2.9-20180118.113513-159.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/weblookandfeel/weblaf-ui/1.2.9-SNAPSHOT/weblaf-ui-1.2.9-20180119.102826-160.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/com/weblookandfeel/weblaf-ui/1.2.9-SNAPSHOT/weblaf-ui-1.2.9-20180118.113513-159-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/weblookandfeel/weblaf-ui/1.2.9-SNAPSHOT/weblaf-ui-1.2.9-20180119.102826-160-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/weblookandfeel/weblaf-ui/1.2.9-SNAPSHOT/weblaf-ui-1.2.9-20180118.113513-159-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/weblookandfeel/weblaf-ui/1.2.9-SNAPSHOT/weblaf-ui-1.2.9-20180119.102826-160-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
