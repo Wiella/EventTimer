@@ -69,6 +69,11 @@ public class HotkeyEditor extends WebHotkeyField implements Fonts
                      * Updating field.
                      */
                     setHotkeyData ( hotkey.get () );
+
+                    /**
+                     * Informing about occurred action.
+                     */
+                    fireActionPerformed ();
                 }
             }
         } );

@@ -96,6 +96,12 @@
                             <color>227,157,45,125</color>
                         </GradientBackground>
                     </decoration>
+                    <decoration states="disabled">
+                        <GradientBackground>
+                            <color>200,200,200,25</color>
+                            <color>200,200,200,125</color>
+                        </GradientBackground>
+                    </decoration>
                     <decoration states="transparent">
                         <ColorBackground color="transparent" />
                     </decoration>

@@ -22,9 +22,9 @@ import com.event.timer.style.icons.Icons;
 import com.event.timer.style.skin.Styles;
 import com.event.timer.style.sound.SoundEffect;
 import com.event.timer.ui.behavior.CtrlMoveBehavior;
-import com.event.timer.ui.hotkey.Hotkeys;
 import com.event.timer.ui.components.BackgroundPanel;
 import com.event.timer.ui.components.BackgroundSeparator;
+import com.event.timer.ui.hotkey.Hotkeys;
 
 import javax.swing.*;
 import java.awt.*;
@@ -147,6 +147,7 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
         titlePanel.add ( titleLabel, BorderLayout.CENTER );
 
         settings = new WebButton ( StyleId.buttonUndecorated, settings32, settingsHover32 );
+        settings.setCursor ( Cursor.getPredefinedCursor ( Cursor.HAND_CURSOR ) );
         settings.addActionListener ( e -> showSettings () );
         titlePanel.add ( settings, BorderLayout.EAST );
 
@@ -243,7 +244,15 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
         if ( !isTimerRunning () )
         {
             /**
-             * Ensure dialog exists.
+             * Disabling all elements to make it obvious timer can't be used while settings are open.
+             */
+            if ( settingsDialog == null || !settingsDialog.isVisible () )
+            {
+                SwingUtils.setEnabledRecursively ( EventTimerDialog.this, false, true );
+            }
+
+            /**
+             * Making sure dialog exists.
              */
             if ( settingsDialog == null )
             {
@@ -266,18 +275,10 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
             }
 
             /**
-             * Display dialog when needed.
+             * Displaying settings dialog when needed.
              */
             if ( !settingsDialog.isVisible () )
             {
-                /**
-                 * Disabling all elements to make it obvious timer can't be used while settings are open.
-                 */
-                SwingUtils.setEnabledRecursively ( EventTimerDialog.this, false, true );
-
-                /**
-                 * Displaying settings dialog.
-                 */
                 settingsDialog.setVisible ( true );
             }
         }

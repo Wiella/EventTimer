@@ -248,10 +248,7 @@ public final class DhuumEncounter extends AbstractEncounter implements Icons, Co
             final WebLabel eventView = new WebLabel ( event.icon () );
             eventView.onMousePress ( MouseButton.left, e -> {
                 eventView.setEnabled ( !eventView.isEnabled () );
-                event.announcements ().forEach ( a -> {
-                    a.setEnabled ( eventView.isEnabled () );
-                    System.out.println ( a.id () + " ----> " + eventView.isEnabled () );
-                } );
+                event.announcements ().forEach ( a -> a.setEnabled ( eventView.isEnabled () ) );
                 updateFeed.run ();
             } );
             eventControls.add ( eventView, LineLayout.MIDDLE );

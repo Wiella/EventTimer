@@ -6,6 +6,7 @@ import com.alee.extended.layout.FormLayout;
 import com.alee.extended.layout.VerticalFlowLayout;
 import com.alee.extended.tab.DocumentData;
 import com.alee.laf.WebLookAndFeel;
+import com.alee.laf.button.WebButton;
 import com.alee.laf.button.WebToggleButton;
 import com.alee.laf.checkbox.WebCheckBox;
 import com.alee.laf.grouping.GroupPane;
@@ -15,7 +16,6 @@ import com.alee.laf.separator.WebSeparator;
 import com.alee.laf.window.WebDialog;
 import com.alee.managers.settings.processors.WindowSettings;
 import com.alee.managers.style.StyleId;
-import com.alee.utils.swing.MouseButton;
 import com.event.timer.data.encounter.Encounter;
 import com.event.timer.data.encounter.Encounters;
 import com.event.timer.style.color.Colors;
@@ -89,13 +89,13 @@ public abstract class SettingsDialog extends WebDialog<SettingsDialog> implement
     {
         setLayout ( new VerticalFlowLayout ( VerticalFlowLayout.TOP, 0, 0 ) );
 
+        final ComponentMoveBehavior moveBehavior = new ComponentMoveBehavior ( getContentPane () );
+        moveBehavior.install ();
+
         /**
          * Title.
          */
         final WebPanel title = new WebPanel ( Styles.dialogTitle.at ( this ), new BorderLayout ( 10, 0 ) );
-
-        final ComponentMoveBehavior moveBehavior = new ComponentMoveBehavior ( title );
-        moveBehavior.install ();
 
         final WebLabel titleIcon = new WebLabel ( settingsHover32 );
         title.add ( titleIcon, BorderLayout.WEST );
@@ -105,8 +105,9 @@ public abstract class SettingsDialog extends WebDialog<SettingsDialog> implement
         titleLabel.setFont ( titleFont );
         title.add ( titleLabel, BorderLayout.CENTER );
 
-        final WebLabel exitIcon = new WebLabel ( swirl32 );
-        exitIcon.onMousePress ( MouseButton.left, e -> SettingsDialog.this.dispose () );
+        final WebButton exitIcon = new WebButton ( StyleId.buttonUndecorated, check32, checkHover32 );
+        exitIcon.setCursor ( Cursor.getPredefinedCursor ( Cursor.HAND_CURSOR ) );
+        exitIcon.addActionListener ( e -> SettingsDialog.this.dispose () );
         title.add ( exitIcon, BorderLayout.EAST );
 
         /**

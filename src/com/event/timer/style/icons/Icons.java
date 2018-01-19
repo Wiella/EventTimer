@@ -24,6 +24,8 @@ public interface Icons
      */
     public static final Icon settings32 = createPNG ( "settings.png", 32 );
     public static final Icon settingsHover32 = createPNG ( "settings-hover.png", 32 );
+    public static final Icon check32 = createPNG ( "check.png", 32, 0.8f );
+    public static final Icon checkHover32 = createPNG ( "check.png", 32 );
 
     /**
      * Marker icons.
@@ -102,6 +104,22 @@ public interface Icons
      */
     public static Icon createPNG ( final String path, final int size )
     {
-        return ImageUtils.createPreviewIcon ( new ImageIcon ( Icons.class.getResource ( "resources/" + path ) ), size );
+        return createPNG ( path, size, 1.0f );
+    }
+
+
+    /**
+     * Returns scaled {@link Icon}.
+     *
+     * @param path    {@link Icon} path relative to this interface
+     * @param size    size to scale {@link Icon} to
+     * @param opacity {@link Icon} opacity
+     * @return scaled {@link Icon}
+     */
+    public static Icon createPNG ( final String path, final int size, final float opacity )
+    {
+        final ImageIcon src = new ImageIcon ( Icons.class.getResource ( "resources/" + path ) );
+        final ImageIcon scaled = ImageUtils.createPreviewIcon ( src, size );
+        return opacity >= 1f || opacity < 0f ? scaled : ImageUtils.createTransparentCopy ( scaled, opacity );
     }
 }
