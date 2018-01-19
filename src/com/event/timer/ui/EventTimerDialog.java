@@ -23,7 +23,8 @@ import com.event.timer.style.skin.Styles;
 import com.event.timer.style.sound.SoundEffect;
 import com.event.timer.ui.behavior.CtrlMoveBehavior;
 import com.event.timer.ui.hotkey.Hotkeys;
-import com.event.timer.ui.settings.BackgroundPanel;
+import com.event.timer.ui.components.BackgroundPanel;
+import com.event.timer.ui.components.BackgroundSeparator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,6 +46,7 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
      * UI elements.
      */
     private BackgroundPanel titlePanel;
+    private BackgroundSeparator titleSeparator;
     private WebLabel titleIcon;
     private WebStyledLabel titleLabel;
     private WebButton settings;
@@ -144,14 +146,15 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
         titleLabel.setFont ( titleFont );
         titlePanel.add ( titleLabel, BorderLayout.CENTER );
 
-        settings = new WebButton ( Styles.dialogTitleSettings.at ( titlePanel ), settings32, settingsHover32 );
+        settings = new WebButton ( StyleId.buttonUndecorated, settings32, settingsHover32 );
         settings.addActionListener ( e -> showSettings () );
         titlePanel.add ( settings, BorderLayout.EAST );
 
         /**
          * Title separator.
          */
-        final WebSeparator separator = new WebSeparator ( Styles.customizedSeparator, WebSeparator.HORIZONTAL );
+        titleSeparator = new BackgroundSeparator ( Styles.customizedSeparator,
+                WebSeparator.HORIZONTAL, "DisplayTitleBackground" );
 
         /**
          * Content area.
@@ -190,7 +193,7 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
          * Adding content elements.
          */
         add ( titlePanel );
-        add ( separator );
+        add ( titleSeparator );
         add ( contentPanel );
     }
 
@@ -239,6 +242,9 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
     {
         if ( !isTimerRunning () )
         {
+            /**
+             * Ensure dialog exists.
+             */
             if ( settingsDialog == null )
             {
                 settingsDialog = new SettingsDialog ( EventTimerDialog.this )
@@ -247,20 +253,31 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
                     protected void settingsChanged ()
                     {
                         /**
+                         * Enabling all elements back to allow timer usage.
+                         */
+                        SwingUtils.setEnabledRecursively ( EventTimerDialog.this, true, true );
+
+                        /**
                          * Updating starting screen to reflect changes.
                          */
                         updateToStartingScreen ();
-
-                        /**
-                         * Updating current event popup visibility and location.
-                         */
-                        titlePanel.updateStates ();
-                        contentPanel.updateStates ();
                     }
                 };
             }
+
+            /**
+             * Display dialog when needed.
+             */
             if ( !settingsDialog.isVisible () )
             {
+                /**
+                 * Disabling all elements to make it obvious timer can't be used while settings are open.
+                 */
+                SwingUtils.setEnabledRecursively ( EventTimerDialog.this, false, true );
+
+                /**
+                 * Displaying settings dialog.
+                 */
                 settingsDialog.setVisible ( true );
             }
         }
@@ -578,5 +595,15 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
         small4.setEnabled ( true );
         small4.setIcon ( empty32 );
         small4.setText ( "{" + Hotkeys.EXIT.get ().toString () + ":c(" + red + ")} to exit" );
+    }
+
+    /**
+     * Updating background element settings.
+     */
+    protected void updateBackgroundSettings ()
+    {
+        titlePanel.updateStates ();
+        titleSeparator.updateStates ();
+        contentPanel.updateStates ();
     }
 }

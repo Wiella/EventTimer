@@ -31,25 +31,19 @@
                         </Stripe>
                     </SeparatorStripes>
                 </decoration>
+                <decoration states="transparent">
+                    <SeparatorStripes>
+                        <Stripe>
+                            <color>transparent</color>
+                        </Stripe>
+                    </SeparatorStripes>
+                </decoration>
             </decorations>
         </painter>
     </style>
 
     <!-- Customized toggle button -->
     <style type="togglebutton" id="customized" padding="5,15,5,15">
-        <painter>
-            <decorations>
-                <decoration>
-                    <ButtonLayout>
-                        <StyledButtonText constraints="text" color="245,245,245" shadow="true" shadowColor="black" shadowSize="2" />
-                    </ButtonLayout>
-                </decoration>
-            </decorations>
-        </painter>
-    </style>
-
-    <!-- Customized button -->
-    <style type="button" id="customized" padding="5,15,5,15">
         <painter>
             <decorations>
                 <decoration>
@@ -107,10 +101,6 @@
                     </decoration>
                 </decorations>
             </painter>
-
-            <!-- Settings button -->
-            <style type="button" id="settings" extends="undecorated" />
-
         </style>
 
         <!-- Content panel -->

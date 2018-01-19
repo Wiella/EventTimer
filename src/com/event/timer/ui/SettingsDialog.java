@@ -41,6 +41,11 @@ import java.util.List;
 public abstract class SettingsDialog extends WebDialog<SettingsDialog> implements Icons, Colors, Fonts
 {
     /**
+     * {@link EventTimerDialog}.
+     */
+    private EventTimerDialog eventTimer;
+
+    /**
      * Constructs new {@link SettingsDialog}.
      *
      * @param eventTimer {@link EventTimerDialog}
@@ -48,6 +53,7 @@ public abstract class SettingsDialog extends WebDialog<SettingsDialog> implement
     public SettingsDialog ( final EventTimerDialog eventTimer )
     {
         super ( Styles.dialog, eventTimer, "Event Timer Settings" );
+        this.eventTimer = eventTimer;
 
         /**
          * Dialog settings.
@@ -228,11 +234,13 @@ public abstract class SettingsDialog extends WebDialog<SettingsDialog> implement
         final WebCheckBox titleBackground = new WebCheckBox ( Styles.customizedCheckBox, "Title background" );
         titleBackground.setFont ( smallFont );
         titleBackground.registerSettings ( "DisplayTitleBackground", true );
+        titleBackground.addActionListener ( e -> eventTimer.updateBackgroundSettings () );
         content.add ( titleBackground );
 
         final WebCheckBox contentBackground = new WebCheckBox ( Styles.customizedCheckBox, "Content background" );
         contentBackground.setFont ( smallFont );
         contentBackground.registerSettings ( "DisplayContentBackground", true );
+        contentBackground.addActionListener ( e -> eventTimer.updateBackgroundSettings () );
         content.add ( contentBackground );
 
         return new DocumentData<> ( "basic", "Basic settings", content );

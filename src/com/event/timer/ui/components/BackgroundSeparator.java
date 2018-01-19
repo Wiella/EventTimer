@@ -1,6 +1,6 @@
-package com.event.timer.ui.settings;
+package com.event.timer.ui.components;
 
-import com.alee.laf.panel.WebPanel;
+import com.alee.laf.separator.WebSeparator;
 import com.alee.managers.settings.SettingsManager;
 import com.alee.managers.style.StyleId;
 import com.alee.painter.decoration.DecorationUtils;
@@ -10,10 +10,12 @@ import com.alee.utils.CollectionUtils;
 import java.util.List;
 
 /**
+ * Separator that can become transparent based on provided setting.
+ *
  * @author Mikle Garin
  */
 
-public final class BackgroundPanel extends WebPanel implements Stateful
+public final class BackgroundSeparator extends WebSeparator implements Stateful
 {
     /**
      * Background setting key.
@@ -23,14 +25,15 @@ public final class BackgroundPanel extends WebPanel implements Stateful
     private final String settingsKey;
 
     /**
-     * Constructs new {@link BackgroundPanel}.
+     * Constructs new {@link BackgroundSeparator}.
      *
-     * @param id         {@link StyleId}
-     * @param settingKey background setting key
+     * @param id          {@link StyleId}
+     * @param orientation separator orientation
+     * @param settingKey  background setting key
      */
-    public BackgroundPanel ( final StyleId id, final String settingKey )
+    public BackgroundSeparator ( final StyleId id, final int orientation, final String settingKey )
     {
-        super ( id );
+        super ( id, orientation );
         this.settingsKey = settingKey;
         updateStates ();
     }
@@ -43,7 +46,7 @@ public final class BackgroundPanel extends WebPanel implements Stateful
     }
 
     /**
-     * Updates panel states.
+     * Updates separator states.
      */
     public void updateStates ()
     {
