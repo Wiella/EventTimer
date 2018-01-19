@@ -11,6 +11,7 @@ import com.event.timer.data.event.EventSettings;
 import com.event.timer.style.font.Fonts;
 import com.event.timer.style.skin.EventTimerExtension;
 import com.event.timer.ui.EventTimerDialog;
+import com.event.timer.ui.settings.NotificationSettings;
 
 /**
  * Main timer class used for launching.
@@ -45,6 +46,7 @@ public final class EventTimer
                 /**
                  * Data aliases.
                  */
+                XmlUtils.processAnnotations ( NotificationSettings.class );
                 XmlUtils.processAnnotations ( EventSettings.class );
                 XmlUtils.processAnnotations ( AnnouncementSettings.class );
 

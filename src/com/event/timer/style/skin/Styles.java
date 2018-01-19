@@ -18,6 +18,7 @@ public final class Styles
     public static final StyleId customizedToggleButton = StyleId.of ( "customized" );
     public static final StyleId customizedCheckBox = StyleId.of ( "customized" );
     public static final StyleId greenTabToggleButton = StyleId.of ( "green-tab" );
+    public static final StyleId announcementPopup = StyleId.of ( "announcement" );
 
     /**
      * Dialog styles.

@@ -101,6 +101,18 @@
         </painter>
     </style>
 
+    <!-- Notification popup -->
+    <style type="popup" id="announcement" padding="10">
+        <painter>
+            <decorations overwrite="true">
+                <decoration>
+                    <WebShape round="5" />
+                    <ColorBackground color="0,0,0,80" />
+                </decoration>
+            </decorations>
+        </painter>
+    </style>
+
     <!-- Event Timer Dialog -->
     <style type="rootpane" id="timer-dialog" extends="dialog-transparent">
 
@@ -112,14 +124,14 @@
             <painter>
                 <decorations>
                     <decoration>
-                        <WebShape round="5" />
+                        <WebShape round="5,5,0,0" />
                         <GradientBackground from="0,0" to="0,1">
                             <color>227,157,45,25</color>
                             <color>227,157,45,125</color>
                         </GradientBackground>
                     </decoration>
-                    <decoration states="attached">
-                        <WebShape round="5,5,0,0" />
+                    <decoration states="unattached">
+                        <WebShape round="5" />
                     </decoration>
                     <decoration states="disabled">
                         <GradientBackground>
@@ -139,11 +151,11 @@
             <painter>
                 <decorations>
                     <decoration>
-                        <WebShape round="5" />
+                        <WebShape round="0,0,5,5" />
                         <ColorBackground color="0,0,0,80" />
                     </decoration>
-                    <decoration states="attached">
-                        <WebShape round="0,0,5,5" />
+                    <decoration states="unattached">
+                        <WebShape round="5" />
                     </decoration>
                     <decoration states="transparent">
                         <ColorBackground color="transparent" />

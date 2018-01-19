@@ -52,9 +52,9 @@ public final class BackgroundPanel extends WebPanel implements Stateful
         {
             states.add ( "transparent" );
         }
-        if ( attachmentKey != null && SettingsManager.get ( attachmentKey, true ) )
+        if ( attachmentKey != null && !SettingsManager.get ( attachmentKey, true ) )
         {
-            states.add ( "attached" );
+            states.add ( "unattached" );
         }
         return states;
     }

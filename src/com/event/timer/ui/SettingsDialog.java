@@ -4,6 +4,8 @@ import com.alee.extended.behavior.ComponentMoveBehavior;
 import com.alee.extended.label.WebStyledLabel;
 import com.alee.extended.layout.FormLayout;
 import com.alee.extended.layout.VerticalFlowLayout;
+import com.alee.extended.panel.GroupPanel;
+import com.alee.extended.panel.GroupingType;
 import com.alee.extended.tab.DocumentData;
 import com.alee.laf.WebLookAndFeel;
 import com.alee.laf.button.WebButton;
@@ -12,9 +14,12 @@ import com.alee.laf.checkbox.WebCheckBox;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.separator.WebSeparator;
+import com.alee.laf.text.WebTextField;
 import com.alee.laf.window.WebDialog;
 import com.alee.managers.settings.processors.WindowSettings;
 import com.alee.managers.style.StyleId;
+import com.alee.utils.SwingUtils;
+import com.alee.utils.TextUtils;
 import com.alee.utils.swing.UnselectableButtonGroup;
 import com.event.timer.data.encounter.Encounter;
 import com.event.timer.data.encounter.Encounters;
@@ -24,6 +29,8 @@ import com.event.timer.style.icons.Icons;
 import com.event.timer.style.skin.Styles;
 import com.event.timer.ui.hotkey.HotkeyEditor;
 import com.event.timer.ui.hotkey.Hotkeys;
+import com.event.timer.ui.settings.NotificationSettings;
+import com.event.timer.ui.settings.Notifications;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,6 +40,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author Mikle Garin
@@ -198,25 +206,71 @@ public abstract class SettingsDialog extends WebDialog<SettingsDialog> implement
         final HotkeyEditor exitHotkey = new HotkeyEditor ( Hotkeys.EXIT );
         hotkeysPanel.add ( exitHotkeyLabel, exitHotkey );
 
-        //        /**
-        //         * Separator.
-        //         */
-        //
-        //        content.add ( createPartsSeparator () );
-        //
-        //        /**
-        //         * Current event popup settings.
-        //         */
-        //
-        //        final WebCheckBox displayCurrentEvent = new WebCheckBox ( Styles.customizedCheckBox, "Current event popup" );
-        //        displayCurrentEvent.registerSettings ( "DisplayCurrentEventPopup", true );
-        //
-        //        final WebButton currentEventPosition = new WebButton ( StyleId.buttonIcon, flag32 );
-        //        currentEventPosition.addActionListener ( e -> {
-        //
-        //        } );
-        //
-        //        content.add ( new GroupPanel ( GroupingType.fillFirst, displayCurrentEvent, currentEventPosition ) );
+        /**
+         * Separator.
+         */
+
+        content.add ( createPartsSeparator () );
+
+        /**
+         * Current event popup settings.
+         */
+
+        final WebCheckBox notificationsBackground = new WebCheckBox ( Styles.customizedCheckBox, "Notifications background" );
+        notificationsBackground.registerSettings ( "DisplayNotificationsBackground", true );
+        content.add ( notificationsBackground );
+
+        final WebPanel notifications = new WebPanel ( StyleId.panelTransparent, new VerticalFlowLayout ( 0, 5, true, false ) );
+        content.add ( notifications );
+
+        final Function<NotificationSettings, JComponent> createNotificationSettings = settings -> {
+            final WebTextField nameField = new WebTextField ( settings.name (), 1 );
+            final WebButton locationButton = new WebButton ( flag32 );
+            final WebButton deleteButton = new WebButton ( downstate32 );
+            final GroupPanel np = new GroupPanel ( GroupingType.fillFirst, 5, true, nameField, locationButton, deleteButton );
+
+            nameField.onChange ( ( c, e ) -> SwingUtils.invokeLater ( () -> {
+                final String text = nameField.getText ();
+                final String name = TextUtils.notEmpty ( text ) ? text : NotificationSettings.DEFAULT_NAME;
+                settings.setName ( name );
+                Notifications.save ( settings );
+            } ) );
+
+            locationButton.addActionListener ( e -> {
+                Notifications.position ( settings );
+            } );
+
+            deleteButton.addActionListener ( e -> {
+                Notifications.delete ( settings );
+                notifications.remove ( np );
+                notifications.revalidate ();
+                notifications.repaint ();
+                SwingUtils.invokeLater ( SettingsDialog.this::pack );
+            } );
+
+            return np;
+        };
+        final Runnable updateNotifications = () -> {
+            notifications.removeAll ();
+            for ( final NotificationSettings settings : Notifications.list () )
+            {
+                notifications.add ( createNotificationSettings.apply ( settings ) );
+            }
+            notifications.revalidate ();
+            notifications.repaint ();
+            SwingUtils.invokeLater ( SettingsDialog.this::pack );
+        };
+        updateNotifications.run ();
+
+        final WebButton addNotification = new WebButton ( StyleId.buttonIcon, "Add notification area", checkpoint32 );
+        addNotification.addActionListener ( e -> {
+            final NotificationSettings settings = Notifications.create ();
+            notifications.add ( createNotificationSettings.apply ( settings ) );
+            notifications.revalidate ();
+            notifications.repaint ();
+            SwingUtils.invokeLater ( SettingsDialog.this::pack );
+        } );
+        content.add ( addNotification );
 
         /**
          * Separator.
