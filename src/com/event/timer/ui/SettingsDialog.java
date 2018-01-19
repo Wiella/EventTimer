@@ -4,8 +4,6 @@ import com.alee.extended.behavior.ComponentMoveBehavior;
 import com.alee.extended.label.WebStyledLabel;
 import com.alee.extended.layout.FormLayout;
 import com.alee.extended.layout.VerticalFlowLayout;
-import com.alee.extended.panel.GroupPanel;
-import com.alee.extended.panel.GroupingType;
 import com.alee.extended.tab.DocumentData;
 import com.alee.laf.WebLookAndFeel;
 import com.alee.laf.button.WebButton;
@@ -200,25 +198,25 @@ public abstract class SettingsDialog extends WebDialog<SettingsDialog> implement
         final HotkeyEditor exitHotkey = new HotkeyEditor ( Hotkeys.EXIT );
         hotkeysPanel.add ( exitHotkeyLabel, exitHotkey );
 
-        /**
-         * Separator.
-         */
-
-        content.add ( createPartsSeparator () );
-
-        /**
-         * Current event popup settings.
-         */
-
-        final WebCheckBox displayCurrentEvent = new WebCheckBox ( Styles.customizedCheckBox, "Current event popup" );
-        displayCurrentEvent.registerSettings ( "DisplayCurrentEventPopup", true );
-
-        final WebButton currentEventPosition = new WebButton ( StyleId.buttonIcon, flag32 );
-        currentEventPosition.addActionListener ( e -> {
-
-        } );
-
-        content.add ( new GroupPanel ( GroupingType.fillFirst, displayCurrentEvent, currentEventPosition ) );
+        //        /**
+        //         * Separator.
+        //         */
+        //
+        //        content.add ( createPartsSeparator () );
+        //
+        //        /**
+        //         * Current event popup settings.
+        //         */
+        //
+        //        final WebCheckBox displayCurrentEvent = new WebCheckBox ( Styles.customizedCheckBox, "Current event popup" );
+        //        displayCurrentEvent.registerSettings ( "DisplayCurrentEventPopup", true );
+        //
+        //        final WebButton currentEventPosition = new WebButton ( StyleId.buttonIcon, flag32 );
+        //        currentEventPosition.addActionListener ( e -> {
+        //
+        //        } );
+        //
+        //        content.add ( new GroupPanel ( GroupingType.fillFirst, displayCurrentEvent, currentEventPosition ) );
 
         /**
          * Separator.
