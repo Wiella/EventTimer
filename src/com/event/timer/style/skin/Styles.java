@@ -12,10 +12,12 @@ public final class Styles
     /**
      * Basic styles.
      */
+    public static final StyleId eventLabel = StyleId.of ( "event" );
     public static final StyleId announcementLabel = StyleId.of ( "announcement" );
     public static final StyleId customizedSeparator = StyleId.of ( "customized" );
     public static final StyleId customizedToggleButton = StyleId.of ( "customized" );
     public static final StyleId customizedCheckBox = StyleId.of ( "customized" );
+    public static final StyleId greenTabToggleButton = StyleId.of ( "green-tab" );
 
     /**
      * Dialog styles.

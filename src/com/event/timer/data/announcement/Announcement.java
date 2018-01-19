@@ -18,9 +18,9 @@ import java.util.List;
 public final class Announcement
 {
     /**
-     * Settings key for disabled {@link Announcement}s.
+     * {@link Announcement}s settings.
      */
-    private static final String DISABLED_ANNOUNCEMENTS_KEY = "DisabledAnnouncements";
+    private static final String ANNOUNCEMENTS_KEY = "Announcements";
 
     /**
      * Remaining {@link Encounter} time when {@link Announcement} should be made.
@@ -129,9 +129,7 @@ public final class Announcement
      */
     public boolean enabled ()
     {
-        final String group = event ().encounter ().settingsGroup ();
-        final List<String> disabled = SettingsManager.get ( group, DISABLED_ANNOUNCEMENTS_KEY, ( List<String> ) null );
-        return disabled == null || !disabled.contains ( id () );
+        return event ().enabled () && load ().enabled ();
     }
 
     /**
@@ -141,17 +139,45 @@ public final class Announcement
      */
     public void setEnabled ( final boolean enabled )
     {
-        final String id = id ();
+        /**
+         * Ensure event is enabled.
+         */
+        if ( enabled && !event ().enabled () )
+        {
+            event ().setEnabled ( true );
+        }
+
+        /**
+         * Update announcement state.
+         */
+        final AnnouncementSettings settings = load ();
+        settings.setEnabled ( enabled );
+        save ( settings );
+    }
+
+    /**
+     * Returns loaded {@link AnnouncementSettings}.
+     *
+     * @return loaded {@link AnnouncementSettings}
+     */
+    private AnnouncementSettings load ()
+    {
         final String group = event ().encounter ().settingsGroup ();
-        final List<String> disabled = SettingsManager.get ( group, DISABLED_ANNOUNCEMENTS_KEY, new ArrayList<> ( 0 ) );
-        if ( enabled )
-        {
-            disabled.remove ( id );
-        }
-        else if ( !disabled.contains ( id ) )
-        {
-            disabled.add ( id );
-        }
-        SettingsManager.set ( group, DISABLED_ANNOUNCEMENTS_KEY, !disabled.isEmpty () ? disabled : null );
+        final List<AnnouncementSettings> all = SettingsManager.get ( group, ANNOUNCEMENTS_KEY, new ArrayList<> ( 1 ) );
+        return all.stream ().filter ( s -> id ().equals ( s.id () ) ).findFirst ().orElse ( new AnnouncementSettings ( id () ) );
+    }
+
+    /**
+     * Saves {@link AnnouncementSettings}.
+     *
+     * @param settings {@link AnnouncementSettings} to save
+     */
+    private void save ( final AnnouncementSettings settings )
+    {
+        final String group = event ().encounter ().settingsGroup ();
+        final List<AnnouncementSettings> all = SettingsManager.get ( group, ANNOUNCEMENTS_KEY, new ArrayList<> ( 1 ) );
+        all.removeIf ( announcementSettings -> id ().equals ( announcementSettings.id () ) );
+        all.add ( settings );
+        SettingsManager.set ( group, ANNOUNCEMENTS_KEY, all );
     }
 }

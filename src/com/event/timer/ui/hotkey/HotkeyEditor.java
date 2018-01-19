@@ -23,7 +23,6 @@ public class HotkeyEditor extends WebHotkeyField implements Fonts
     public HotkeyEditor ( final Hotkey hotkey )
     {
         super ();
-        setFont ( smallFont );
 
         /**
          * Initial hotkey.

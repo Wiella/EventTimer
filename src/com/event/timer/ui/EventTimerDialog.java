@@ -135,14 +135,13 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
         /**
          * Title.
          */
-        titlePanel = new BackgroundPanel ( Styles.dialogTitle.at ( this ), "DisplayTitleBackground" );
+        titlePanel = new BackgroundPanel ( Styles.dialogTitle.at ( this ), "DisplayTitleBackground", "DisplayContentBackground" );
         titlePanel.setLayout ( new BorderLayout ( 10, 0 ) );
 
         titleIcon = new WebLabel ();
         titlePanel.add ( titleIcon, BorderLayout.WEST );
 
-        titleLabel = new WebStyledLabel ( StyleId.styledlabelShadow );
-        titleLabel.setHorizontalAlignment ( WebStyledLabel.CENTER );
+        titleLabel = new WebStyledLabel ( StyleId.styledlabelShadow, WebStyledLabel.CENTER );
         titleLabel.setFont ( titleFont );
         titlePanel.add ( titleLabel, BorderLayout.CENTER );
 
@@ -155,33 +154,19 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
          * Title separator.
          */
         titleSeparator = new BackgroundSeparator ( Styles.customizedSeparator,
-                WebSeparator.HORIZONTAL, "DisplayTitleBackground" );
+                WebSeparator.HORIZONTAL, "DisplayTitleBackground", "DisplayContentBackground" );
 
         /**
          * Content area.
          */
-        contentPanel = new BackgroundPanel ( Styles.dialogContentArea.at ( this ), "DisplayContentBackground" );
+        contentPanel = new BackgroundPanel ( Styles.dialogContentArea.at ( this ), "DisplayContentBackground", "DisplayTitleBackground" );
         contentPanel.setLayout ( new VerticalFlowLayout ( 10, 10, true, false ) );
 
-        small1 = new WebStyledLabel ( Styles.announcementLabel );
-        small1.setHorizontalAlignment ( WebStyledLabel.CENTER );
-        small1.setFont ( smallFont );
-
-        small2 = new WebStyledLabel ( Styles.announcementLabel );
-        small2.setHorizontalAlignment ( WebStyledLabel.CENTER );
-        small2.setFont ( smallFont );
-
-        large = new WebStyledLabel ( Styles.announcementLabel );
-        large.setHorizontalAlignment ( WebStyledLabel.CENTER );
-        large.setFont ( largeFont );
-
-        small3 = new WebStyledLabel ( Styles.announcementLabel );
-        small3.setHorizontalAlignment ( WebStyledLabel.CENTER );
-        small3.setFont ( smallFont );
-
-        small4 = new WebStyledLabel ( Styles.announcementLabel );
-        small4.setHorizontalAlignment ( WebStyledLabel.CENTER );
-        small4.setFont ( smallFont );
+        small1 = new WebStyledLabel ( Styles.announcementLabel, WebStyledLabel.CENTER );
+        small2 = new WebStyledLabel ( Styles.announcementLabel, WebStyledLabel.CENTER );
+        large = new WebStyledLabel ( Styles.announcementLabel, WebStyledLabel.CENTER );
+        small3 = new WebStyledLabel ( Styles.announcementLabel, WebStyledLabel.CENTER );
+        small4 = new WebStyledLabel ( Styles.announcementLabel, WebStyledLabel.CENTER );
 
         contentPanel.add ( small1, small2, large, small3, small4 );
 

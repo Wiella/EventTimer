@@ -5,6 +5,10 @@ import com.alee.managers.settings.SettingsManager;
 import com.alee.managers.style.StyleManager;
 import com.alee.skin.dark.DarkSkin;
 import com.alee.utils.SwingUtils;
+import com.alee.utils.XmlUtils;
+import com.event.timer.data.announcement.AnnouncementSettings;
+import com.event.timer.data.event.EventSettings;
+import com.event.timer.style.font.Fonts;
 import com.event.timer.style.skin.EventTimerExtension;
 import com.event.timer.ui.EventTimerDialog;
 
@@ -34,8 +38,15 @@ public final class EventTimer
                  * L&F installation.
                  */
                 WebLookAndFeel.setForceSingleEventsThread ( true );
+                WebLookAndFeel.globalControlFont = Fonts.smallFont;
                 WebLookAndFeel.install ( DarkSkin.class );
                 StyleManager.addExtensions ( new EventTimerExtension () );
+
+                /**
+                 * Data aliases.
+                 */
+                XmlUtils.processAnnotations ( EventSettings.class );
+                XmlUtils.processAnnotations ( AnnouncementSettings.class );
 
                 /**
                  * Manager settings.

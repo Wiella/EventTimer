@@ -4,8 +4,8 @@
     <id>com.event.timer</id>
     <extends>weblaf.dark.skin</extends>
 
-    <!-- Announcement label -->
-    <style type="styledlabel" id="announcement" extends="shadow">
+    <!-- Event label -->
+    <style type="styledlabel" id="event" extends="shadow">
         <painter>
             <decorations>
                 <decoration states="disabled">
@@ -18,16 +18,20 @@
         </painter>
     </style>
 
+    <!-- Announcement label -->
+    <style type="styledlabel" id="announcement" extends="event" />
+
     <!-- Customized separator -->
-    <style type="separator" id="customized">
+    <style type="separator" id="customized" margin="0,10,0,10">
         <painter>
             <decorations overwrite="true">
                 <decoration>
                     <SeparatorStripes>
                         <Stripe>
-                            <color fraction="0.0">10,10,10,5</color>
-                            <color fraction="0.5">10,10,10</color>
-                            <color fraction="1.0">10,10,10,5</color>
+                            <color>128,128,128</color>
+                            <!--<color fraction="0.0">10,10,10,5</color>-->
+                            <!--<color fraction="0.5">10,10,10</color>-->
+                            <!--<color fraction="1.0">10,10,10,5</color>-->
                         </Stripe>
                     </SeparatorStripes>
                 </decoration>
@@ -79,6 +83,24 @@
         </painter>
     </style>
 
+    <!-- Green toggle label -->
+    <style type="togglebutton" id="green-tab">
+        <painter>
+            <decorations overwrite="true">
+                <decoration>
+                    <ButtonLayout>
+                        <StyledButtonText constraints="text" color="245,245,245" shadow="true" shadowColor="black" shadowSize="2" />
+                    </ButtonLayout>
+                </decoration>
+                <decoration states="selected">
+                    <ButtonLayout>
+                        <StyledButtonText constraints="text" globalStyle="c(44,206,120)" />
+                    </ButtonLayout>
+                </decoration>
+            </decorations>
+        </painter>
+    </style>
+
     <!-- Event Timer Dialog -->
     <style type="rootpane" id="timer-dialog" extends="dialog-transparent">
 
@@ -96,6 +118,9 @@
                             <color>227,157,45,125</color>
                         </GradientBackground>
                     </decoration>
+                    <decoration states="attached">
+                        <WebShape round="5,5,0,0" />
+                    </decoration>
                     <decoration states="disabled">
                         <GradientBackground>
                             <color>200,200,200,25</color>
@@ -110,12 +135,15 @@
         </style>
 
         <!-- Content panel -->
-        <style type="panel" id="content-area" extends="transparent" margin="10" padding="10">
+        <style type="panel" id="content-area" extends="transparent" margin="0,10,10,10" padding="10">
             <painter>
                 <decorations>
                     <decoration>
                         <WebShape round="5" />
                         <ColorBackground color="0,0,0,80" />
+                    </decoration>
+                    <decoration states="attached">
+                        <WebShape round="0,0,5,5" />
                     </decoration>
                     <decoration states="transparent">
                         <ColorBackground color="transparent" />

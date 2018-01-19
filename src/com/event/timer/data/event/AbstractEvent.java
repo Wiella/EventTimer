@@ -1,11 +1,15 @@
 package com.event.timer.data.event;
 
+import com.alee.managers.settings.SettingsManager;
 import com.event.timer.data.encounter.Encounter;
 import com.event.timer.style.icons.Icons;
 import com.event.timer.style.sound.SoundEffect;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Abstract {@link Event} with some convenience methods.
@@ -16,14 +20,24 @@ import java.util.function.Function;
 public abstract class AbstractEvent implements Event
 {
     /**
-     * Unique {@link Event} identifier.
+     * {@link Event}s settings.
      */
-    private final String id;
+    private static final String EVENTS_KEY = "Events";
 
     /**
      * {@link Encounter} for this {@link Event}.
      */
     private final Encounter encounter;
+
+    /**
+     * Unique {@link Event} identifier.
+     */
+    private final String id;
+
+    /**
+     * {@link Event} name.
+     */
+    private final Supplier<String> name;
 
     /**
      * {@link Event} icon.
@@ -48,40 +62,49 @@ public abstract class AbstractEvent implements Event
     /**
      * Constructs new {@link AbstractEvent}.
      *
-     * @param id          unique {@link Event} identifier
      * @param encounter   {@link Encounter} for this {@link Event}
+     * @param id          unique {@link Event} identifier
+     * @param name        {@link Event} name
      * @param description {@link Event} description
      * @param advance     delay for announcement in advance
      * @param sound       sound effect for this {@link Event}
      */
-    public AbstractEvent ( final String id, final Encounter encounter,
+    public AbstractEvent ( final Encounter encounter, final String id, final Supplier<String> name,
                            final Function<Integer, String> description,
                            final long advance, final SoundEffect sound )
     {
-        this ( id, encounter, cycle -> Icons.empty32, description, advance, sound );
+        this ( encounter, id, name, cycle -> Icons.empty32, description, advance, sound );
     }
 
     /**
      * Constructs new {@link AbstractEvent}.
      *
-     * @param id          unique {@link Event} identifier
      * @param encounter   {@link Encounter} for this {@link Event}
+     * @param id          unique {@link Event} identifier
+     * @param name        {@link Event} name
      * @param icon        {@link Event} icon
      * @param description {@link Event} description
      * @param advance     delay for announcement in advance
      * @param sound       sound effect for this {@link Event}
      */
-    public AbstractEvent ( final String id, final Encounter encounter,
+    public AbstractEvent ( final Encounter encounter, final String id, final Supplier<String> name,
                            final Function<Integer, Icon> icon, final Function<Integer, String> description,
                            final long advance, final SoundEffect sound )
     {
         super ();
-        this.id = id;
         this.encounter = encounter;
+        this.id = id;
+        this.name = name;
         this.icon = icon;
         this.description = description;
         this.advance = advance;
         this.sound = sound;
+    }
+
+    @Override
+    public Encounter encounter ()
+    {
+        return encounter;
     }
 
     @Override
@@ -91,15 +114,15 @@ public abstract class AbstractEvent implements Event
     }
 
     @Override
-    public Icon icon ()
+    public String name ()
     {
-        return icon.apply ( 0 );
+        return name.get ();
     }
 
     @Override
-    public Encounter encounter ()
+    public Icon icon ()
     {
-        return encounter;
+        return icon.apply ( 0 );
     }
 
     /**
@@ -134,5 +157,45 @@ public abstract class AbstractEvent implements Event
     public SoundEffect sound ()
     {
         return sound;
+    }
+
+    @Override
+    public boolean enabled ()
+    {
+        return load ().enabled ();
+    }
+
+    @Override
+    public void setEnabled ( final boolean enabled )
+    {
+        final EventSettings settings = load ();
+        settings.setEnabled ( enabled );
+        save ( settings );
+    }
+
+    /**
+     * Returns loaded {@link EventSettings}.
+     *
+     * @return loaded {@link EventSettings}
+     */
+    private EventSettings load ()
+    {
+        final String group = encounter ().settingsGroup ();
+        final List<EventSettings> all = SettingsManager.get ( group, EVENTS_KEY, new ArrayList<> ( 1 ) );
+        return all.stream ().filter ( s -> id ().equals ( s.id () ) ).findFirst ().orElse ( new EventSettings ( id () ) );
+    }
+
+    /**
+     * Saves {@link EventSettings}.
+     *
+     * @param settings {@link EventSettings} to save
+     */
+    private void save ( final EventSettings settings )
+    {
+        final String group = encounter ().settingsGroup ();
+        final List<EventSettings> all = SettingsManager.get ( group, EVENTS_KEY, new ArrayList<> ( 1 ) );
+        all.removeIf ( s -> id ().equals ( s.id () ) );
+        all.add ( settings );
+        SettingsManager.set ( group, EVENTS_KEY, all );
     }
 }

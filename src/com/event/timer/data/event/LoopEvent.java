@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * An {@link Event} that is repeated multiple times throughout the encounter.
@@ -36,26 +37,28 @@ public final class LoopEvent extends AbstractEvent
     /**
      * Constructs new {@link LoopEvent}.
      *
-     * @param id          unique {@link Event} identifier
      * @param encounter   {@link Encounter} for this {@link Event}
+     * @param id          unique {@link Event} identifier
+     * @param name        {@link Event} name
      * @param start       remaining encounter time when first {@link Event} occurs
      * @param delay       event repeat delay
      * @param advance     delay for announcement in advance
      * @param description {@link Event} description
      * @param sound       sound effect for this {@link Event}
      */
-    public LoopEvent ( final String id, final Encounter encounter,
+    public LoopEvent ( final Encounter encounter, final String id, final Supplier<String> name,
                        final long start, final long delay, final long advance,
                        final Function<Integer, String> description, final SoundEffect sound )
     {
-        this ( id, encounter, start, delay, 0L, advance, cycle -> Icons.empty32, description, sound );
+        this ( encounter, id, name, start, delay, 0L, advance, cycle -> Icons.empty32, description, sound );
     }
 
     /**
      * Constructs new {@link LoopEvent}.
      *
-     * @param id          unique {@link Event} identifier
      * @param encounter   {@link Encounter} for this {@link Event}
+     * @param id          unique {@link Event} identifier
+     * @param name        {@link Event} name
      * @param start       remaining encounter time when first {@link Event} occurs
      * @param delay       event repeat delay
      * @param advance     delay for announcement in advance
@@ -63,18 +66,19 @@ public final class LoopEvent extends AbstractEvent
      * @param description {@link Event} description
      * @param sound       sound effect for this {@link Event}
      */
-    public LoopEvent ( final String id, final Encounter encounter,
+    public LoopEvent ( final Encounter encounter, final String id, final Supplier<String> name,
                        final long start, final long delay, final long advance,
                        final Function<Integer, Icon> icon, final Function<Integer, String> description, final SoundEffect sound )
     {
-        this ( id, encounter, start, delay, 0L, advance, icon, description, sound );
+        this ( encounter, id, name, start, delay, 0L, advance, icon, description, sound );
     }
 
     /**
      * Constructs new {@link LoopEvent}.
      *
-     * @param id          unique {@link Event} identifier
      * @param encounter   {@link Encounter} for this {@link Event}
+     * @param id          unique {@link Event} identifier
+     * @param name        {@link Event} name
      * @param start       remaining encounter time when first {@link Event} occurs
      * @param delay       event repeat delay
      * @param end         remaining encounter time after which {@link Event} doesn't occur anymore
@@ -82,18 +86,19 @@ public final class LoopEvent extends AbstractEvent
      * @param description {@link Event} description
      * @param sound       sound effect for this {@link Event}
      */
-    public LoopEvent ( final String id, final Encounter encounter,
+    public LoopEvent ( final Encounter encounter, final String id, final Supplier<String> name,
                        final long start, final long delay, final long end, final long advance,
                        final Function<Integer, String> description, final SoundEffect sound )
     {
-        this ( id, encounter, start, delay, end, advance, cycle -> Icons.empty32, description, sound );
+        this ( encounter, id, name, start, delay, end, advance, cycle -> Icons.empty32, description, sound );
     }
 
     /**
      * Constructs new {@link LoopEvent}.
      *
-     * @param id          unique {@link Event} identifier
      * @param encounter   {@link Encounter} for this {@link Event}
+     * @param id          unique {@link Event} identifier
+     * @param name        {@link Event} name
      * @param start       remaining encounter time when first {@link Event} occurs
      * @param delay       event repeat delay
      * @param end         remaining encounter time after which {@link Event} doesn't occur anymore
@@ -102,11 +107,11 @@ public final class LoopEvent extends AbstractEvent
      * @param description {@link Event} description
      * @param sound       sound effect for this {@link Event}
      */
-    public LoopEvent ( final String id, final Encounter encounter,
+    public LoopEvent ( final Encounter encounter, final String id, final Supplier<String> name,
                        final long start, final long delay, final long end, final long advance,
                        final Function<Integer, Icon> icon, final Function<Integer, String> description, final SoundEffect sound )
     {
-        super ( id, encounter, icon, description, advance, sound );
+        super ( encounter, id, name, icon, description, advance, sound );
         this.start = start;
         this.end = end;
         this.delay = delay;

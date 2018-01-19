@@ -4,18 +4,20 @@ import com.alee.extended.behavior.ComponentMoveBehavior;
 import com.alee.extended.label.WebStyledLabel;
 import com.alee.extended.layout.FormLayout;
 import com.alee.extended.layout.VerticalFlowLayout;
+import com.alee.extended.panel.GroupPanel;
+import com.alee.extended.panel.GroupingType;
 import com.alee.extended.tab.DocumentData;
 import com.alee.laf.WebLookAndFeel;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.button.WebToggleButton;
 import com.alee.laf.checkbox.WebCheckBox;
-import com.alee.laf.grouping.GroupPane;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.separator.WebSeparator;
 import com.alee.laf.window.WebDialog;
 import com.alee.managers.settings.processors.WindowSettings;
 import com.alee.managers.style.StyleId;
+import com.alee.utils.swing.UnselectableButtonGroup;
 import com.event.timer.data.encounter.Encounter;
 import com.event.timer.data.encounter.Encounters;
 import com.event.timer.style.color.Colors;
@@ -136,6 +138,8 @@ public abstract class SettingsDialog extends WebDialog<SettingsDialog> implement
      */
     private void initializeSettingsUI ( final WebPanel content )
     {
+        final UnselectableButtonGroup group = new UnselectableButtonGroup ( false );
+
         final WebPanel tabTitles = new WebPanel ( StyleId.panelTransparent, new BorderLayout () );
         final CardLayout tabsContentLayout = new CardLayout ( 0, 0 );
         final WebPanel tabsContent = new WebPanel ( StyleId.panelTransparent, tabsContentLayout );
@@ -144,7 +148,7 @@ public abstract class SettingsDialog extends WebDialog<SettingsDialog> implement
         settings.add ( createBasicSettings () );
         settings.addAll ( createEncounterSettings () );
 
-        final GroupPane pane = new GroupPane ( GroupPane.HORIZONTAL, settings.size (), 1 );
+        final WebPanel pane = new WebPanel ( StyleId.panelTransparent, new GridLayout ( 1, settings.size (), 5, 0 ) );
         for ( final DocumentData section : settings )
         {
             final Component sectionContent = section.getComponent ();
@@ -153,10 +157,10 @@ public abstract class SettingsDialog extends WebDialog<SettingsDialog> implement
             final Icon icon = section.getIcon ();
             final String title = section.getTitle ();
             final WebToggleButton sectionButton = new WebToggleButton ( Styles.customizedToggleButton, title, icon );
-            sectionButton.setFont ( smallFont );
             sectionButton.setSelected ( settings.indexOf ( section ) == 0 );
             sectionButton.addActionListener ( e -> tabsContentLayout.show ( tabsContent, section.getId () ) );
             pane.add ( sectionButton );
+            group.add ( sectionButton );
         }
         tabTitles.add ( pane );
 
@@ -181,46 +185,40 @@ public abstract class SettingsDialog extends WebDialog<SettingsDialog> implement
         content.add ( hotkeysPanel );
 
         final WebLabel settingsHotkeyLabel = new WebLabel ( StyleId.labelShadow, "Settings dialog:" );
-        settingsHotkeyLabel.setFont ( smallFont );
         final HotkeyEditor settingsHotkey = new HotkeyEditor ( Hotkeys.SETTINGS );
         hotkeysPanel.add ( settingsHotkeyLabel, settingsHotkey );
 
         final WebLabel startHotkeyLabel = new WebLabel ( StyleId.labelShadow, "Start timer:" );
-        startHotkeyLabel.setFont ( smallFont );
         final HotkeyEditor startHotkey = new HotkeyEditor ( Hotkeys.START );
         hotkeysPanel.add ( startHotkeyLabel, startHotkey );
 
         final WebLabel decreaseTimeHotkeyLabel = new WebLabel ( StyleId.labelShadow, "Decrease time:" );
-        decreaseTimeHotkeyLabel.setFont ( smallFont );
         final HotkeyEditor adjustTimeHotkey = new HotkeyEditor ( Hotkeys.DECREASE_TIME );
         hotkeysPanel.add ( decreaseTimeHotkeyLabel, adjustTimeHotkey );
 
         final WebLabel exitHotkeyLabel = new WebLabel ( StyleId.labelShadow, "Exit application:" );
-        exitHotkeyLabel.setFont ( smallFont );
         final HotkeyEditor exitHotkey = new HotkeyEditor ( Hotkeys.EXIT );
         hotkeysPanel.add ( exitHotkeyLabel, exitHotkey );
 
-        // todo
-        //        /**
-        //         * Separator.
-        //         */
-        //
-        //        content.add ( createPartsSeparator () );
-        //
-        //        /**
-        //         * Current event popup settings.
-        //         */
-        //
-        //        final WebCheckBox displayCurrentEvent = new WebCheckBox ( Styles.customizedCheckBox, "Current event popup" );
-        //        displayCurrentEvent.setFont ( smallFont );
-        //        displayCurrentEvent.registerSettings ( "DisplayCurrentEventPopup", true );
-        //
-        //        final WebButton currentEventPosition = new WebButton ( StyleId.buttonIcon, flag32 );
-        //        currentEventPosition.addActionListener ( e -> {
-        //
-        //        } );
-        //
-        //        content.add ( new GroupPanel ( GroupingType.fillFirst, displayCurrentEvent, currentEventPosition ) );
+        /**
+         * Separator.
+         */
+
+        content.add ( createPartsSeparator () );
+
+        /**
+         * Current event popup settings.
+         */
+
+        final WebCheckBox displayCurrentEvent = new WebCheckBox ( Styles.customizedCheckBox, "Current event popup" );
+        displayCurrentEvent.registerSettings ( "DisplayCurrentEventPopup", true );
+
+        final WebButton currentEventPosition = new WebButton ( StyleId.buttonIcon, flag32 );
+        currentEventPosition.addActionListener ( e -> {
+
+        } );
+
+        content.add ( new GroupPanel ( GroupingType.fillFirst, displayCurrentEvent, currentEventPosition ) );
 
         /**
          * Separator.
@@ -233,13 +231,11 @@ public abstract class SettingsDialog extends WebDialog<SettingsDialog> implement
          */
 
         final WebCheckBox titleBackground = new WebCheckBox ( Styles.customizedCheckBox, "Title background" );
-        titleBackground.setFont ( smallFont );
         titleBackground.registerSettings ( "DisplayTitleBackground", true );
         titleBackground.addActionListener ( e -> eventTimer.updateBackgroundSettings () );
         content.add ( titleBackground );
 
         final WebCheckBox contentBackground = new WebCheckBox ( Styles.customizedCheckBox, "Content background" );
-        contentBackground.setFont ( smallFont );
         contentBackground.registerSettings ( "DisplayContentBackground", true );
         contentBackground.addActionListener ( e -> eventTimer.updateBackgroundSettings () );
         content.add ( contentBackground );

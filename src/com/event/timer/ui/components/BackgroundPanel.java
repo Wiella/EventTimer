@@ -5,8 +5,8 @@ import com.alee.managers.settings.SettingsManager;
 import com.alee.managers.style.StyleId;
 import com.alee.painter.decoration.DecorationUtils;
 import com.alee.painter.decoration.Stateful;
-import com.alee.utils.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,23 +25,38 @@ public final class BackgroundPanel extends WebPanel implements Stateful
     private final String settingsKey;
 
     /**
+     * Settings key of the other {@link BackgroundPanel} this one is attached to.
+     * Used to create distinct styles for some specific cases.
+     */
+    private final String attachmentKey;
+
+    /**
      * Constructs new {@link BackgroundPanel}.
      *
      * @param id         {@link StyleId}
      * @param settingKey background setting key
      */
-    public BackgroundPanel ( final StyleId id, final String settingKey )
+    public BackgroundPanel ( final StyleId id, final String settingKey, final String attachmentKey )
     {
         super ( id );
         this.settingsKey = settingKey;
+        this.attachmentKey = attachmentKey;
         updateStates ();
     }
 
     @Override
     public List<String> getStates ()
     {
-        final boolean transparent = settingsKey != null && !SettingsManager.get ( settingsKey, true );
-        return transparent ? CollectionUtils.asList ( "transparent" ) : null;
+        final List<String> states = new ArrayList<> ( 2 );
+        if ( settingsKey != null && !SettingsManager.get ( settingsKey, true ) )
+        {
+            states.add ( "transparent" );
+        }
+        if ( attachmentKey != null && SettingsManager.get ( attachmentKey, true ) )
+        {
+            states.add ( "attached" );
+        }
+        return states;
     }
 
     /**

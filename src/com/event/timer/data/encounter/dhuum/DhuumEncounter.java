@@ -2,10 +2,10 @@ package com.event.timer.data.encounter.dhuum;
 
 import com.alee.extended.label.WebStyledLabel;
 import com.alee.extended.layout.FormLayout;
-import com.alee.extended.layout.LineLayout;
 import com.alee.extended.layout.VerticalFlowLayout;
 import com.alee.extended.panel.GroupPanel;
 import com.alee.extended.panel.GroupingType;
+import com.alee.laf.button.WebToggleButton;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.scroll.WebScrollPane;
@@ -16,22 +16,21 @@ import com.alee.utils.SwingUtils;
 import com.alee.utils.TextUtils;
 import com.alee.utils.collection.ImmutableList;
 import com.alee.utils.swing.MouseButton;
+import com.alee.utils.swing.UnselectableButtonGroup;
 import com.event.timer.data.announcement.Announcement;
 import com.event.timer.data.encounter.AbstractEncounter;
 import com.event.timer.data.event.Event;
 import com.event.timer.data.event.LoopEvent;
 import com.event.timer.data.event.SingleEvent;
 import com.event.timer.style.color.Colors;
-import com.event.timer.style.font.Fonts;
 import com.event.timer.style.format.TimerUnits;
 import com.event.timer.style.icons.Icons;
 import com.event.timer.style.skin.Styles;
 import com.event.timer.style.sound.SoundEffects;
 
 import javax.swing.*;
-import java.util.HashMap;
+import java.awt.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Dhuum encounter timings.
@@ -39,7 +38,7 @@ import java.util.Map;
  * @author Mikle Garin
  */
 
-public final class DhuumEncounter extends AbstractEncounter implements Icons, Colors, Fonts, SoundEffects
+public final class DhuumEncounter extends AbstractEncounter implements Icons, Colors, SoundEffects
 {
     /**
      * todo Sub-encounter for last phase?
@@ -55,12 +54,31 @@ public final class DhuumEncounter extends AbstractEncounter implements Icons, Co
      * Settings group name.
      * Can be used to flush previous settings of this encounter.
      */
-    private static final String group = "DhuumEncounter.v1";
+    private static final String group = "DhuumEncounter.v2";
+
+    /**
+     * Default green player markers.
+     */
+    private static final ImmutableList<Icon> markers = new ImmutableList<> (
+            arrowMarker,
+            circleMarker,
+            heartMarker,
+            squareMarker,
+            starMarker,
+            spiralMarker,
+            triangleMarker
+    );
 
     /**
      * Cached {@link List} of {@link Event}s.
      */
     private transient List<Event> events;
+
+    /**
+     * Settings variables.
+     */
+    private transient Runnable updateEventsFeed;
+    private transient Runnable updateAnnouncementsFeed;
 
     /**
      * Constructs new {@link DhuumEncounter} encounter.
@@ -81,17 +99,44 @@ public final class DhuumEncounter extends AbstractEncounter implements Icons, Co
                 {
                     events = new ImmutableList<> (
                             /**
-                             * Greens.
+                             * First player greens.
                              */
                             new LoopEvent (
-                                    "green",
                                     DhuumEncounter.this,
+                                    "green1", () -> "First green ( " + player ( 1 ) + " )",
                                     startsAt ( "9m 30s" ),
-                                    happensEvery ( "30s" ),
-                                    endsAt ( "30s" ),
+                                    happensEvery ( "1m 30s" ),
                                     notifyIn ( "10s" ),
-                                    this::marker,
-                                    cycle -> "{" + player ( cycle ) + ":c(" + green + ")}",
+                                    cycle -> marker ( 1, cycle ),
+                                    cycle -> "{" + player ( 1 ) + ":c(" + green + ")}",
+                                    tickSound
+                            ),
+
+                            /**
+                             * Second player greens.
+                             */
+                            new LoopEvent (
+                                    DhuumEncounter.this,
+                                    "green2", () -> "Second green ( " + player ( 2 ) + " )",
+                                    startsAt ( "9m" ),
+                                    happensEvery ( "1m 30s" ),
+                                    notifyIn ( "10s" ),
+                                    cycle -> marker ( 2, cycle ),
+                                    cycle -> "{" + player ( 2 ) + ":c(" + green + ")}",
+                                    tickSound
+                            ),
+
+                            /**
+                             * Third player greens.
+                             */
+                            new LoopEvent (
+                                    DhuumEncounter.this,
+                                    "green3", () -> "Third green ( " + player ( 3 ) + " )",
+                                    startsAt ( "8m 30s" ),
+                                    happensEvery ( "1m 30s" ),
+                                    notifyIn ( "10s" ),
+                                    cycle -> marker ( 3, cycle ),
+                                    cycle -> "{" + player ( 3 ) + ":c(" + green + ")}",
                                     tickSound
                             ),
 
@@ -99,10 +144,10 @@ public final class DhuumEncounter extends AbstractEncounter implements Icons, Co
                              * Boss spawn.
                              */
                             new SingleEvent (
-                                    "boss",
                                     DhuumEncounter.this,
-                                    occursAt ( "8m" ),
-                                    notifyIn ( "5s" ),
+                                    "boss", () -> "Boss spawn",
+                                    occursAt ( "7m 50s" ),
+                                    notifyIn ( "10s" ),
                                     boss32,
                                     "{Boss spawns:c(" + red + ")}",
                                     springSound
@@ -112,8 +157,8 @@ public final class DhuumEncounter extends AbstractEncounter implements Icons, Co
                              * Teleports.
                              */
                             new LoopEvent (
-                                    "teleport",
                                     DhuumEncounter.this,
+                                    "teleport", () -> "Teleport AoE",
                                     startsAt ( "7m 10s" ),
                                     happensEvery ( "80s" ),
                                     notifyIn ( "5s" ),
@@ -126,8 +171,8 @@ public final class DhuumEncounter extends AbstractEncounter implements Icons, Co
                              * Middles.
                              */
                             new LoopEvent (
-                                    "middle",
                                     DhuumEncounter.this,
+                                    "middle", () -> "Middle AoE",
                                     startsAt ( "6m 25s" ),
                                     happensEvery ( "80s" ),
                                     notifyIn ( "13s" ),
@@ -140,8 +185,8 @@ public final class DhuumEncounter extends AbstractEncounter implements Icons, Co
                              * Enrage.
                              */
                             new SingleEvent (
-                                    "enrage",
                                     DhuumEncounter.this,
+                                    "enrage", () -> "Boss enrage",
                                     occursAt ( "0s" ),
                                     notifyIn ( "10s" ),
                                     enrage32,
@@ -165,155 +210,165 @@ public final class DhuumEncounter extends AbstractEncounter implements Icons, Co
     public JComponent settings ()
     {
         final WebPanel settings = new WebPanel ( StyleId.panelTransparent, new FormLayout ( false, true, 5, 5 ) );
+        createGreenPlayersSettings ( settings );
+        createFeedSettings ( settings );
+        return settings;
+    }
 
-        /**
-         * Players for greens.
-         */
-
+    /**
+     * Creates settings UI for players doing greens.
+     *
+     * @param settings settings panel
+     */
+    private void createGreenPlayersSettings ( final WebPanel settings )
+    {
         final WebLabel greensTitle = new WebLabel ( StyleId.labelShadow, "Greens:" );
-        greensTitle.setFont ( smallFont );
         settings.add ( greensTitle );
 
         final WebTextField green1 = new WebTextField ();
-        green1.setFont ( smallFont );
         green1.setHorizontalAlignment ( WebTextField.CENTER );
         green1.registerSettings ( settingsGroup (), "green1", "Green 1" );
-        green1.onChange ( ( c, e ) -> green1.saveSettings () );
+        green1.onChange ( ( c, e ) -> SwingUtils.invokeLater ( () -> {
+            green1.saveSettings ();
+            updateEventsFeed.run ();
+            updateAnnouncementsFeed.run ();
+        } ) );
 
         final WebTextField green2 = new WebTextField ();
-        green2.setFont ( smallFont );
         green2.setHorizontalAlignment ( WebTextField.CENTER );
         green2.registerSettings ( settingsGroup (), "green2", "Green 2" );
-        green2.onChange ( ( c, e ) -> green2.saveSettings () );
+        green2.onChange ( ( c, e ) -> SwingUtils.invokeLater ( () -> {
+            green2.saveSettings ();
+            updateEventsFeed.run ();
+            updateAnnouncementsFeed.run ();
+        } ) );
 
         final WebTextField green3 = new WebTextField ();
-        green3.setFont ( smallFont );
         green3.setHorizontalAlignment ( WebTextField.CENTER );
         green3.registerSettings ( settingsGroup (), "green3", "Green 3" );
-        green3.onChange ( ( c, e ) -> green3.saveSettings () );
+        green3.onChange ( ( c, e ) -> SwingUtils.invokeLater ( () -> {
+            green3.saveSettings ();
+            updateEventsFeed.run ();
+            updateAnnouncementsFeed.run ();
+        } ) );
 
         settings.add ( new GroupPanel ( GroupingType.fillAll, 5, true, green1, green2, green3 ) );
+    }
 
-        /**
-         * Feed customization.
-         */
+    /**
+     * Creates settings UI for announcement feed customization.
+     *
+     * @param settings settings panel
+     */
+    private void createFeedSettings ( final WebPanel settings )
+    {
+        final UnselectableButtonGroup group = new UnselectableButtonGroup ( false );
 
-        final WebLabel feedTitle = new WebLabel ( StyleId.labelShadow, "Announcements feed", WebLabel.CENTER );
-        feedTitle.setFont ( smallFont );
-        settings.add ( feedTitle, FormLayout.LINE );
+        final CardLayout layout = new CardLayout ( 0, 0 );
+        final WebPanel feedContent = new WebPanel ( StyleId.panelTransparent, layout );
+        feedContent.add ( createEventsFeedSettings (), "events" );
+        feedContent.add ( createAnnouncementsFeedSettings (), "announcements" );
 
+        final WebStyledLabel feedTitle = new WebStyledLabel ( StyleId.styledlabelShadow, "Customize feed:" );
+
+        final WebToggleButton eventsToggle = new WebToggleButton ( Styles.greenTabToggleButton, "Events", true );
+        eventsToggle.addActionListener ( e -> layout.show ( feedContent, "events" ) );
+        group.add ( eventsToggle );
+
+        final WebToggleButton announcementsToggle = new WebToggleButton ( Styles.greenTabToggleButton, "Announcements" );
+        announcementsToggle.addActionListener ( e -> layout.show ( feedContent, "announcements" ) );
+        group.add ( announcementsToggle );
+
+        settings.add ( new GroupPanel ( GroupingType.fillFirst, 5, true, feedTitle, eventsToggle, announcementsToggle ), FormLayout.LINE );
+        settings.add ( feedContent, FormLayout.LINE );
+    }
+
+    private JComponent createEventsFeedSettings ()
+    {
         final WebPanel feed = new WebPanel ( StyleId.panelTransparent, new VerticalFlowLayout ( 0, 5, true, false ) );
         feed.setPreferredWidth ( 0 );
 
-        final Map<Announcement, WebStyledLabel> announcements = new HashMap<> ( 20 );
-        final Runnable updateFeed = () -> {
+        updateEventsFeed = () -> {
             feed.removeAll ();
-            announcements.clear ();
+            for ( final Event event : events () )
+            {
+                final WebStyledLabel eventView = new WebStyledLabel ( Styles.eventLabel, event.icon (), WebStyledLabel.CENTER );
+                eventView.setEnabled ( event.enabled () );
+                eventView.setIcon ( event.icon () );
+                eventView.setText ( event.name () );
+                eventView.onMousePress ( MouseButton.left, e -> {
+                    eventView.setEnabled ( !eventView.isEnabled () );
+                    event.setEnabled ( eventView.isEnabled () );
+                    updateAnnouncementsFeed.run ();
+                } );
+                feed.add ( eventView );
+            }
+            feed.revalidate ();
+            feed.repaint ();
+        };
+        updateEventsFeed.run ();
+
+        final WebScrollPane feedScroll = new WebScrollPane ( StyleId.scrollpaneTransparentHovering, feed );
+        feedScroll.setPreferredHeight ( 300 );
+        feedScroll.getVerticalScrollBar ().setUnitIncrement ( 25 );
+        feedScroll.getVerticalScrollBar ().setBlockIncrement ( 50 );
+        return feedScroll;
+    }
+
+    private JComponent createAnnouncementsFeedSettings ()
+    {
+        final WebPanel feed = new WebPanel ( StyleId.panelTransparent, new VerticalFlowLayout ( 0, 5, true, false ) );
+        feed.setPreferredWidth ( 0 );
+
+        updateAnnouncementsFeed = () -> {
+            feed.removeAll ();
             for ( final Announcement announcement : announcements () )
             {
-                final WebStyledLabel announcementView = new WebStyledLabel ( Styles.announcementLabel );
-                announcementView.setHorizontalAlignment ( WebStyledLabel.CENTER );
-                announcementView.setFont ( smallFont );
+                final WebStyledLabel announcementView = new WebStyledLabel ( Styles.announcementLabel, WebStyledLabel.CENTER );
                 announcementView.setEnabled ( announcement.enabled () );
                 announcementView.setIcon ( announcement.icon () );
                 announcementView.setText ( TimerUnits.get ().toString ( announcement.time () ) + ": " + announcement.text () );
                 announcementView.onMousePress ( MouseButton.left, e -> {
                     announcementView.setEnabled ( !announcementView.isEnabled () );
                     announcement.setEnabled ( announcementView.isEnabled () );
+                    updateEventsFeed.run ();
                 } );
                 feed.add ( announcementView );
-                announcements.put ( announcement, announcementView );
             }
             feed.revalidate ();
             feed.repaint ();
         };
-        updateFeed.run ();
+        updateAnnouncementsFeed.run ();
 
         final WebScrollPane feedScroll = new WebScrollPane ( StyleId.scrollpaneTransparentHovering, feed );
         feedScroll.setPreferredHeight ( 300 );
         feedScroll.getVerticalScrollBar ().setUnitIncrement ( 25 );
         feedScroll.getVerticalScrollBar ().setBlockIncrement ( 50 );
-        settings.add ( feedScroll, FormLayout.LINE );
-
-        final WebPanel eventControls = new WebPanel ( StyleId.panelTransparent, new LineLayout ( LineLayout.HORIZONTAL, 5 ) );
-        eventControls.setPadding ( 10, 0, 0, 0 );
-
-        final WebStyledLabel byEventsLabel = new WebStyledLabel ( StyleId.styledlabelShadow, "By events:" );
-        byEventsLabel.setFont ( smallFont );
-        eventControls.add ( byEventsLabel, LineLayout.MIDDLE );
-
-        for ( final Event event : events () )
-        {
-            // todo Initial enabled state
-            final WebLabel eventView = new WebLabel ( event.icon () );
-            eventView.onMousePress ( MouseButton.left, e -> {
-                eventView.setEnabled ( !eventView.isEnabled () );
-                event.announcements ().forEach ( a -> a.setEnabled ( eventView.isEnabled () ) );
-                updateFeed.run ();
-            } );
-            eventControls.add ( eventView, LineLayout.MIDDLE );
-        }
-
-        settings.add ( eventControls, FormLayout.LINE );
-
-        /**
-         * View update actions.
-         */
-
-        green1.onChange ( ( c, e ) -> SwingUtils.invokeLater ( updateFeed ) );
-        green2.onChange ( ( c, e ) -> SwingUtils.invokeLater ( updateFeed ) );
-        green3.onChange ( ( c, e ) -> SwingUtils.invokeLater ( updateFeed ) );
-
-        return settings;
+        return feedScroll;
     }
 
     /**
-     * Returns player name for the specified event cycle.
+     * Returns marker for the specified green player and event cycle.
      *
-     * @param cycle event cycle
-     * @return player name for the specified event cycle
+     * @param number green player number (between 1 and 3)
+     * @param cycle  green event cycle
+     * @return marker for the specified green player and event cycle
      */
-    private String player ( final int cycle )
+    private Icon marker ( final int number, final int cycle )
     {
-        final int number = 1 + ( cycle % 3 );
+        final int index = ( ( number - 1 ) + ( 3 * cycle ) ) % markers.size ();
+        return markers.get ( index );
+    }
+
+    /**
+     * Returns player name for the specified green player and event cycle.
+     *
+     * @param number green player number (between 1 and 3)
+     * @return player name for the specified green player and event cycle
+     */
+    private String player ( final int number )
+    {
         final String player = SettingsManager.get ( settingsGroup (), "green" + number, "Green " + number );
         return TextUtils.notEmpty ( player ) ? player : "Green " + number;
-    }
-
-    /**
-     * Returns marker for the specified event cycle.
-     *
-     * @param cycle event cycle
-     * @return marker for the specified event cycle
-     */
-    private Icon marker ( final int cycle )
-    {
-        final int number = 1 + ( cycle % 7 );
-        switch ( number )
-        {
-            case 1:
-                return arrowMarker;
-
-            case 2:
-                return circleMarker;
-
-            case 3:
-                return heartMarker;
-
-            case 4:
-                return squareMarker;
-
-            case 5:
-                return starMarker;
-
-            case 6:
-                return spiralMarker;
-
-            case 7:
-                return triangleMarker;
-
-            default:
-                return empty32;
-        }
     }
 }
