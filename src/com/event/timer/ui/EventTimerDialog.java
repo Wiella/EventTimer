@@ -25,6 +25,7 @@ import com.event.timer.ui.behavior.CtrlMoveBehavior;
 import com.event.timer.ui.components.BackgroundPanel;
 import com.event.timer.ui.components.BackgroundSeparator;
 import com.event.timer.ui.hotkey.Hotkeys;
+import com.event.timer.ui.notification.Notifications;
 
 import javax.swing.*;
 import java.awt.*;
@@ -328,9 +329,6 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
                 @Override
                 public void run ()
                 {
-                    /**
-                     * Performing single timer tick.
-                     */
                     EventTimerDialog.this.run ();
                 }
             }, 0L, 1000L );
@@ -370,6 +368,7 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
                  */
                 final SoundEffect playSoundEffect;
                 final int nextIndex;
+                final Announcement activatedAnnounce;
                 final Announcement nextAnnounce;
                 final int currentIndex = lastAnnounced == -1 ? 0 : lastAnnounced + 1;
                 if ( currentIndex < announcements.size () )
@@ -381,7 +380,7 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
                          * New event reached into advance time.
                          */
                         lastAnnounced++;
-                        playSoundEffect = currentAnnounce.event ().sound ();
+                        activatedAnnounce = currentAnnounce;
                         nextIndex = lastAnnounced == -1 ? 0 : lastAnnounced + 1;
                         nextAnnounce = nextIndex < announcements.size () ? announcements.get ( nextIndex ) : null;
                     }
@@ -390,7 +389,7 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
                         /**
                          * Still waiting for next event.
                          */
-                        playSoundEffect = null;
+                        activatedAnnounce = null;
                         nextIndex = currentIndex;
                         nextAnnounce = currentAnnounce;
                     }
@@ -400,7 +399,7 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
                     /**
                      * There is no next event.
                      */
-                    playSoundEffect = null;
+                    activatedAnnounce = null;
                     nextIndex = currentIndex;
                     nextAnnounce = null;
                 }
@@ -419,11 +418,19 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
                 } );
 
                 /**
-                 * Sound effect.
+                 * Announcement becoming active.
                  */
-                if ( playSoundEffect != null )
+                if ( activatedAnnounce != null )
                 {
-                    playSoundEffect.play ();
+                    /**
+                     * Displaying notification.
+                     */
+                    SwingUtils.invokeLater ( () -> Notifications.show ( activatedAnnounce ) );
+
+                    /**
+                     * Playing sound effect.
+                     */
+                    activatedAnnounce.event ().sound ().play ();
                 }
 
                 /**
@@ -521,37 +528,7 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
     {
         label.setEnabled ( announcement == null || encounter.duration () - announcement.time () > elapsed );
         label.setIcon ( announcement != null ? announcement.icon () : empty32 );
-        label.setText ( announcement != null ? displayText ( announcement, elapsed ) : " " );
-    }
-
-    /**
-     * Returns display text for the {@link Announcement}.
-     *
-     * @param announcement {@link Announcement}
-     * @param elapsed      encounter time elapsed
-     * @return display text for the {@link Announcement}
-     */
-    private String displayText ( final Announcement announcement, final long elapsed )
-    {
-        /**
-         * Exact time of announcement.
-         */
-        final long exactTime = announcement.time ();
-        final String exactTimeText = TimerUnits.get ().toString ( exactTime );
-
-        /**
-         * Announcement text.
-         */
-        final String infoText = announcement.text ();
-
-        /**
-         * Time left until announcement.
-         */
-        final long leftTime = encounter.duration () - elapsed - exactTime;
-        final long advance = announcement.event ().advance ();
-        final String advanceText = 1000 <= leftTime && leftTime <= advance ? " (" + TimerUnits.get ().toString ( leftTime ) + ")" : "";
-
-        return exactTimeText + ": " + infoText + advanceText;
+        label.setText ( announcement != null ? announcement.text ( encounter.duration () - elapsed - announcement.time () ) : " " );
     }
 
     /**

@@ -11,7 +11,7 @@ import com.event.timer.data.event.EventSettings;
 import com.event.timer.style.font.Fonts;
 import com.event.timer.style.skin.EventTimerExtension;
 import com.event.timer.ui.EventTimerDialog;
-import com.event.timer.ui.settings.NotificationSettings;
+import com.event.timer.data.notification.NotificationSettings;
 
 /**
  * Main timer class used for launching.

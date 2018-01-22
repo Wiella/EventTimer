@@ -23,14 +23,14 @@ import com.alee.utils.TextUtils;
 import com.alee.utils.swing.UnselectableButtonGroup;
 import com.event.timer.data.encounter.Encounter;
 import com.event.timer.data.encounter.Encounters;
+import com.event.timer.data.notification.NotificationSettings;
 import com.event.timer.style.color.Colors;
 import com.event.timer.style.font.Fonts;
 import com.event.timer.style.icons.Icons;
 import com.event.timer.style.skin.Styles;
 import com.event.timer.ui.hotkey.HotkeyEditor;
 import com.event.timer.ui.hotkey.Hotkeys;
-import com.event.timer.ui.settings.NotificationSettings;
-import com.event.timer.ui.settings.Notifications;
+import com.event.timer.ui.notification.Notifications;
 
 import javax.swing.*;
 import java.awt.*;
@@ -236,9 +236,7 @@ public abstract class SettingsDialog extends WebDialog<SettingsDialog> implement
                 Notifications.save ( settings );
             } ) );
 
-            locationButton.addActionListener ( e -> {
-                Notifications.position ( settings );
-            } );
+            locationButton.addActionListener ( e -> Notifications.position (  settings ) );
 
             deleteButton.addActionListener ( e -> {
                 Notifications.delete ( settings );

@@ -3,6 +3,7 @@ package com.event.timer.data.announcement;
 import com.alee.managers.settings.SettingsManager;
 import com.event.timer.data.encounter.Encounter;
 import com.event.timer.data.event.Event;
+import com.event.timer.data.notification.NotificationSettings;
 import com.event.timer.style.format.TimerUnits;
 
 import javax.swing.*;
@@ -113,6 +114,36 @@ public final class Announcement
     }
 
     /**
+     * Returns {@link Announcement} text with the specified time left.
+     *
+     * @param timeLeft time left until {@link Announcement}
+     * @return {@link Announcement} text with the specified time left
+     */
+    public String text ( final long timeLeft )
+    {
+        /**
+         * Exact time of announcement.
+         */
+        final String exactTimeText = TimerUnits.get ().toString ( time () );
+
+        /**
+         * Announcement text.
+         */
+        final String infoText = text ();
+
+        /**
+         * Time left until announcement.
+         */
+        final long advance = event ().advance ();
+        final String advanceText = 1000 <= timeLeft && timeLeft <= advance ? " (" + TimerUnits.get ().toString ( timeLeft ) + ")" : "";
+
+        /**
+         * Returning resulting text.
+         */
+        return exactTimeText + ": " + infoText + advanceText;
+    }
+
+    /**
      * Returns {@link Event} for which this specific {@link Announcement} exists.
      *
      * @return {@link Event} for which this specific {@link Announcement} exists
@@ -153,6 +184,16 @@ public final class Announcement
         final AnnouncementSettings settings = load ();
         settings.setEnabled ( enabled );
         save ( settings );
+    }
+
+    /**
+     * Returns {@link NotificationSettings} used to display this {@link Announcement}.
+     *
+     * @return {@link NotificationSettings} used to display this {@link Announcement}
+     */
+    public NotificationSettings notification ()
+    {
+        return event ().notification ();
     }
 
     /**

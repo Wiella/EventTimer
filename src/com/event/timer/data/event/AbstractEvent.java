@@ -2,8 +2,10 @@ package com.event.timer.data.event;
 
 import com.alee.managers.settings.SettingsManager;
 import com.event.timer.data.encounter.Encounter;
+import com.event.timer.data.notification.NotificationSettings;
 import com.event.timer.style.icons.Icons;
 import com.event.timer.style.sound.SoundEffect;
+import com.event.timer.ui.notification.Notifications;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -170,6 +172,21 @@ public abstract class AbstractEvent implements Event
     {
         final EventSettings settings = load ();
         settings.setEnabled ( enabled );
+        save ( settings );
+    }
+
+    @Override
+    public NotificationSettings notification ()
+    {
+        final String notificationId = load ().notification ();
+        return Notifications.get ( notificationId );
+    }
+
+    @Override
+    public void setNotification ( final NotificationSettings notification )
+    {
+        final EventSettings settings = load ();
+        settings.setNotification ( notification.id () );
         save ( settings );
     }
 

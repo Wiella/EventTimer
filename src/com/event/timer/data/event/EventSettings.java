@@ -1,5 +1,7 @@
 package com.event.timer.data.event;
 
+import com.event.timer.data.announcement.Announcement;
+import com.event.timer.ui.notification.Notification;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
@@ -25,6 +27,12 @@ public final class EventSettings implements Serializable
      */
     @XStreamAsAttribute
     private Boolean enabled;
+
+    /**
+     * Identifier of a {@link Notification} to display {@link Announcement}s for this {@link Event}.
+     */
+    @XStreamAsAttribute
+    private String notification;
 
     /**
      * Constructs new {@link EventSettings} for {@link Event} with the specified identifier.
@@ -64,5 +72,25 @@ public final class EventSettings implements Serializable
     public void setEnabled ( final boolean enabled )
     {
         this.enabled = enabled;
+    }
+
+    /**
+     * Returns identifier of a {@link Notification} to display {@link Announcement}s for this {@link Event}.
+     *
+     * @return identifier of a {@link Notification} to display {@link Announcement}s for this {@link Event}
+     */
+    public String notification ()
+    {
+        return notification;
+    }
+
+    /**
+     * Sets identifier of a {@link Notification} to display {@link Announcement}s for this {@link Event}.
+     *
+     * @param notification identifier of a {@link Notification} to display {@link Announcement}s for this {@link Event}
+     */
+    public void setNotification ( final String notification )
+    {
+        this.notification = notification;
     }
 }

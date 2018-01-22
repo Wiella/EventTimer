@@ -2,6 +2,7 @@ package com.event.timer.data.event;
 
 import com.event.timer.data.announcement.Announcement;
 import com.event.timer.data.encounter.Encounter;
+import com.event.timer.data.notification.NotificationSettings;
 import com.event.timer.style.sound.SoundEffect;
 
 import javax.swing.*;
@@ -70,6 +71,20 @@ public interface Event
      * @param enabled whether or not this {@link Event} is enabled
      */
     public void setEnabled ( boolean enabled );
+
+    /**
+     * Returns {@link NotificationSettings} used to display {@link Announcement}s for this {@link Event}.
+     *
+     * @return {@link NotificationSettings} used to display {@link Announcement}s for this {@link Event}
+     */
+    public NotificationSettings notification ();
+
+    /**
+     * Sets {@link NotificationSettings} used to display {@link Announcement}s for this {@link Event}.
+     *
+     * @param settings {@link NotificationSettings} used to display {@link Announcement}s for this {@link Event}
+     */
+    public void setNotification ( final NotificationSettings settings );
 
     /**
      * Returns {@link Announcement} for this event.

@@ -5,8 +5,11 @@ import com.alee.extended.layout.FormLayout;
 import com.alee.extended.layout.VerticalFlowLayout;
 import com.alee.extended.panel.GroupPanel;
 import com.alee.extended.panel.GroupingType;
+import com.alee.laf.button.WebButton;
 import com.alee.laf.button.WebToggleButton;
 import com.alee.laf.label.WebLabel;
+import com.alee.laf.menu.WebMenuItem;
+import com.alee.laf.menu.WebPopupMenu;
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.text.WebTextField;
@@ -22,11 +25,13 @@ import com.event.timer.data.encounter.AbstractEncounter;
 import com.event.timer.data.event.Event;
 import com.event.timer.data.event.LoopEvent;
 import com.event.timer.data.event.SingleEvent;
+import com.event.timer.data.notification.NotificationSettings;
 import com.event.timer.style.color.Colors;
 import com.event.timer.style.format.TimerUnits;
 import com.event.timer.style.icons.Icons;
 import com.event.timer.style.skin.Styles;
 import com.event.timer.style.sound.SoundEffects;
+import com.event.timer.ui.notification.Notifications;
 
 import javax.swing.*;
 import java.awt.*;
@@ -256,7 +261,7 @@ public final class DhuumEncounter extends AbstractEncounter implements Icons, Co
     }
 
     /**
-     * Creates settings UI for announcement feed customization.
+     * Creates settings UI for events and announcements feed customization.
      *
      * @param settings settings panel
      */
@@ -283,6 +288,9 @@ public final class DhuumEncounter extends AbstractEncounter implements Icons, Co
         settings.add ( feedContent, FormLayout.LINE );
     }
 
+    /**
+     * Returns settings UI for events feed customization.
+     */
     private JComponent createEventsFeedSettings ()
     {
         final WebPanel feed = new WebPanel ( StyleId.panelTransparent, new VerticalFlowLayout ( 0, 5, true, false ) );
@@ -301,7 +309,20 @@ public final class DhuumEncounter extends AbstractEncounter implements Icons, Co
                     event.setEnabled ( eventView.isEnabled () );
                     updateAnnouncementsFeed.run ();
                 } );
-                feed.add ( eventView );
+
+                final WebButton notification = new WebButton ( StyleId.buttonUndecorated, flag32 );
+                notification.addActionListener ( e -> {
+                    final WebPopupMenu allNotifications = new WebPopupMenu ();
+                    for ( final NotificationSettings settings : Notifications.list () )
+                    {
+                        final WebMenuItem notificationItem = new WebMenuItem ( settings.name () );
+                        notificationItem.addActionListener ( ae -> event.setNotification ( settings ) );
+                        allNotifications.add ( notificationItem );
+                    }
+                    allNotifications.showBelowMiddle ( notification );
+                } );
+
+                feed.add ( new GroupPanel ( GroupingType.fillFirst, eventView, notification ) );
             }
             feed.revalidate ();
             feed.repaint ();
@@ -315,6 +336,9 @@ public final class DhuumEncounter extends AbstractEncounter implements Icons, Co
         return feedScroll;
     }
 
+    /**
+     * Returns settings UI for announcements feed customization.
+     */
     private JComponent createAnnouncementsFeedSettings ()
     {
         final WebPanel feed = new WebPanel ( StyleId.panelTransparent, new VerticalFlowLayout ( 0, 5, true, false ) );

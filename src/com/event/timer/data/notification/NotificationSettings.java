@@ -1,9 +1,12 @@
-package com.event.timer.ui.settings;
+package com.event.timer.data.notification;
 
 import com.alee.utils.TextUtils;
+import com.alee.utils.xml.PointConverter;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamConverter;
 
+import java.awt.*;
 import java.io.Serializable;
 
 /**
@@ -20,6 +23,10 @@ public final class NotificationSettings implements Serializable
 
     @XStreamAsAttribute
     private String name;
+
+    @XStreamConverter ( PointConverter.class )
+    @XStreamAsAttribute
+    private Point location;
 
     public NotificationSettings ()
     {
@@ -41,5 +48,15 @@ public final class NotificationSettings implements Serializable
     public void setName ( final String name )
     {
         this.name = name;
+    }
+
+    public Point location ()
+    {
+        return location;
+    }
+
+    public void setLocation ( final Point location )
+    {
+        this.location = location;
     }
 }
