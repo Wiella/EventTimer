@@ -37,6 +37,9 @@
             <archive location="../jar/weblaf-core-1.2.9-20180119.102511-168.jar" failOnError="true" />
             <archive location="../jar/weblaf-ui-1.2.9-20180119.102826-160.jar" failOnError="true" />
             <archive location="../jar/xstream-1.4.9.jar" failOnError="true" />
+            <archive location="../jar/java-google-speech-api-V2.1.jar" failOnError="true" />
+            <archive location="../jar/java-flac-encoder-0.3.8.jar" failOnError="true" />
+            <archive location="../jar/json-20150729.jar" failOnError="true" />
         </classPath>
         <modulePath />
         <nativeLibraryDirectories />
