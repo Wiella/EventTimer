@@ -11,11 +11,14 @@ import com.alee.laf.WebLookAndFeel;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.button.WebToggleButton;
 import com.alee.laf.checkbox.WebCheckBox;
+import com.alee.laf.combobox.WebComboBox;
+import com.alee.laf.combobox.WebComboBoxRenderer;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.separator.WebSeparator;
 import com.alee.laf.text.WebTextField;
 import com.alee.laf.window.WebDialog;
+import com.alee.managers.settings.SettingsManager;
 import com.alee.managers.settings.processors.WindowSettings;
 import com.alee.managers.style.StyleId;
 import com.alee.utils.SwingUtils;
@@ -40,6 +43,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Function;
 
 /**
@@ -213,6 +217,63 @@ public abstract class SettingsDialog extends WebDialog<SettingsDialog> implement
         content.add ( createPartsSeparator () );
 
         /**
+         * Background settings.
+         */
+
+        final WebCheckBox titleBackground = new WebCheckBox ( Styles.customizedCheckBox, "Title background" );
+        titleBackground.registerSettings ( "DisplayTitleBackground", true );
+        titleBackground.addActionListener ( e -> eventTimer.updateBackgroundSettings () );
+        content.add ( titleBackground );
+
+        final WebCheckBox contentBackground = new WebCheckBox ( Styles.customizedCheckBox, "Content background" );
+        contentBackground.registerSettings ( "DisplayContentBackground", true );
+        contentBackground.addActionListener ( e -> eventTimer.updateBackgroundSettings () );
+        content.add ( contentBackground );
+
+        /**
+         * Separator.
+         */
+
+        content.add ( createPartsSeparator () );
+
+        /**
+         * Announcements to speech.
+         */
+
+        final WebCheckBox enableSpeech = new WebCheckBox ( Styles.customizedCheckBox, "Enable verbal announcements" );
+        enableSpeech.registerSettings ( "VerbalAnnouncements", true );
+        content.add ( enableSpeech );
+
+        final WebLabel languageLabel = new WebLabel ( StyleId.labelShadow, "Choose speaker:" );
+        final WebComboBox languageChooser = new WebComboBox ( new String[]{ "en", "ja", "fr" } );
+        languageChooser.setRenderer ( new WebComboBoxRenderer ()
+        {
+            @Override
+            protected String textForValue ( final JList list, final Object value, final int index, final boolean isSelected,
+                                            final boolean hasFocus )
+            {
+                final String languageTag = ( String ) value;
+                return Locale.forLanguageTag ( languageTag ).getDisplayName () + ( !languageTag.equals ( "en" ) ? " (for lulz)" : "" );
+            }
+        } );
+        languageChooser.setSelectedItem ( SettingsManager.get ( "VerbalSpeaker", "en" ) );
+        languageChooser.addActionListener ( e -> SettingsManager.set ( "VerbalSpeaker", languageChooser.getSelectedItem () ) );
+        content.add ( new GroupPanel ( GroupingType.fillLast, languageLabel, languageChooser ) );
+
+        final Runnable speechSettingsUpdater = () -> {
+            languageLabel.setEnabled ( enableSpeech.isSelected () );
+            languageChooser.setEnabled ( enableSpeech.isSelected () );
+        };
+        enableSpeech.addActionListener ( e -> speechSettingsUpdater.run () );
+        speechSettingsUpdater.run ();
+
+        /**
+         * Separator.
+         */
+
+        content.add ( createPartsSeparator () );
+
+        /**
          * Current event popup settings.
          */
 
@@ -236,7 +297,7 @@ public abstract class SettingsDialog extends WebDialog<SettingsDialog> implement
                 Notifications.save ( settings );
             } ) );
 
-            locationButton.addActionListener ( e -> Notifications.position (  settings ) );
+            locationButton.addActionListener ( e -> Notifications.position ( settings ) );
 
             deleteButton.addActionListener ( e -> {
                 Notifications.delete ( settings );
@@ -271,24 +332,8 @@ public abstract class SettingsDialog extends WebDialog<SettingsDialog> implement
         content.add ( addNotification );
 
         /**
-         * Separator.
+         * Final document data.
          */
-
-        content.add ( createPartsSeparator () );
-
-        /**
-         * Background settings.
-         */
-
-        final WebCheckBox titleBackground = new WebCheckBox ( Styles.customizedCheckBox, "Title background" );
-        titleBackground.registerSettings ( "DisplayTitleBackground", true );
-        titleBackground.addActionListener ( e -> eventTimer.updateBackgroundSettings () );
-        content.add ( titleBackground );
-
-        final WebCheckBox contentBackground = new WebCheckBox ( Styles.customizedCheckBox, "Content background" );
-        contentBackground.registerSettings ( "DisplayContentBackground", true );
-        contentBackground.addActionListener ( e -> eventTimer.updateBackgroundSettings () );
-        content.add ( contentBackground );
 
         return new DocumentData<> ( "basic", "Basic settings", content );
     }

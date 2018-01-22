@@ -7,6 +7,7 @@ import com.alee.laf.button.WebButton;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.separator.WebSeparator;
 import com.alee.laf.window.WebDialog;
+import com.alee.managers.settings.SettingsManager;
 import com.alee.managers.settings.processors.WindowSettings;
 import com.alee.managers.style.StyleId;
 import com.alee.utils.CollectionUtils;
@@ -21,6 +22,7 @@ import com.event.timer.style.format.TimerUnits;
 import com.event.timer.style.icons.Icons;
 import com.event.timer.style.skin.Styles;
 import com.event.timer.style.sound.SoundEffect;
+import com.event.timer.style.sound.SpeechSoundEffect;
 import com.event.timer.ui.behavior.CtrlMoveBehavior;
 import com.event.timer.ui.components.BackgroundPanel;
 import com.event.timer.ui.components.BackgroundSeparator;
@@ -374,7 +376,7 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
                 if ( currentIndex < announcements.size () )
                 {
                     final Announcement currentAnnounce = announcements.get ( currentIndex );
-                    if ( encounter.duration () - elapsed - currentAnnounce.event ().advance () <= currentAnnounce.time () )
+                    if ( encounter.duration () - elapsed - currentAnnounce.event ().time ().advance () <= currentAnnounce.time () )
                     {
                         /**
                          * New event reached into advance time.
@@ -408,7 +410,7 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
                  * Updating view.
                  */
                 SwingUtils.invokeLater ( () -> {
-                    titleIcon.setIcon ( nextIndex > 0 ? announcements.get ( nextIndex - 1 ).icon () : announcement32 );
+                    titleIcon.setIcon ( nextIndex > 0 ? announcements.get ( nextIndex - 1 ).data ().icon () : announcement32 );
                     titleLabel.setText ( timer ( elapsed ) );
                     update ( small1, nextIndex > 2 ? announcements.get ( nextIndex - 3 ) : null, elapsed );
                     update ( small2, nextIndex > 1 ? announcements.get ( nextIndex - 2 ) : null, elapsed );
@@ -428,9 +430,16 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
                     SwingUtils.invokeLater ( () -> Notifications.show ( activatedAnnounce ) );
 
                     /**
-                     * Playing sound effect.
+                     * Sound notification.
                      */
-                    activatedAnnounce.event ().sound ().play ();
+                    if ( SettingsManager.get ( "VerbalAnnouncements", true ) )
+                    {
+                        new SpeechSoundEffect ( activatedAnnounce.data ().speech () ).play ();
+                    }
+                    else
+                    {
+                        activatedAnnounce.data ().sound ().play ();
+                    }
                 }
 
                 /**
@@ -527,7 +536,7 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
     private void update ( final WebStyledLabel label, final Announcement announcement, final long elapsed )
     {
         label.setEnabled ( announcement == null || encounter.duration () - announcement.time () > elapsed );
-        label.setIcon ( announcement != null ? announcement.icon () : empty32 );
+        label.setIcon ( announcement != null ? announcement.data ().icon () : empty32 );
         label.setText ( announcement != null ? announcement.text ( encounter.duration () - elapsed - announcement.time () ) : " " );
     }
 

@@ -22,9 +22,9 @@ import com.alee.utils.swing.MouseButton;
 import com.alee.utils.swing.UnselectableButtonGroup;
 import com.event.timer.data.announcement.Announcement;
 import com.event.timer.data.encounter.AbstractEncounter;
+import com.event.timer.data.event.AnnouncementData;
 import com.event.timer.data.event.Event;
-import com.event.timer.data.event.LoopEvent;
-import com.event.timer.data.event.SingleEvent;
+import com.event.timer.data.event.EventTime;
 import com.event.timer.data.notification.NotificationSettings;
 import com.event.timer.style.color.Colors;
 import com.event.timer.style.format.TimerUnits;
@@ -75,6 +75,19 @@ public final class DhuumEncounter extends AbstractEncounter implements Icons, Co
     );
 
     /**
+     * Default green player marker names.
+     */
+    private static final ImmutableList<String> markerNames = new ImmutableList<> (
+            "arrow",
+            "circle",
+            "heart",
+            "square",
+            "star",
+            "spiral",
+            "triangle"
+    );
+
+    /**
      * Cached {@link List} of {@link Event}s.
      */
     private transient List<Event> events;
@@ -106,97 +119,99 @@ public final class DhuumEncounter extends AbstractEncounter implements Icons, Co
                             /**
                              * First player greens.
                              */
-                            new LoopEvent (
-                                    DhuumEncounter.this,
-                                    "green1", () -> "First green ( " + player ( 1 ) + " )",
-                                    startsAt ( "9m 30s" ),
-                                    happensEvery ( "1m 30s" ),
-                                    notifyIn ( "10s" ),
-                                    cycle -> marker ( 1, cycle ),
-                                    cycle -> "{" + player ( 1 ) + ":c(" + green + ")}",
-                                    tickSound
+                            new Event (
+                                    "green1", () -> markers.get ( 0 ), () -> "First green ( " + player ( 1 ) + " )", DhuumEncounter.this,
+                                    new EventTime ( startsAt ( "9m 30s" ), happensEvery ( "1m 30s" ), notifyIn ( "10s" ) ),
+                                    cycle -> new AnnouncementData (
+                                            marker ( 1, cycle ),
+                                            "{" + player ( 1 ) + ":c(" + green + ")}",
+                                            player ( 1 ) + " to " + markerName ( 1, cycle ) + " in ten seconds",
+                                            tickSound
+                                    )
                             ),
 
                             /**
                              * Second player greens.
                              */
-                            new LoopEvent (
-                                    DhuumEncounter.this,
-                                    "green2", () -> "Second green ( " + player ( 2 ) + " )",
-                                    startsAt ( "9m" ),
-                                    happensEvery ( "1m 30s" ),
-                                    notifyIn ( "10s" ),
-                                    cycle -> marker ( 2, cycle ),
-                                    cycle -> "{" + player ( 2 ) + ":c(" + green + ")}",
-                                    tickSound
+                            new Event (
+                                    "green2", () -> markers.get ( 1 ), () -> "Second green ( " + player ( 1 ) + " )", DhuumEncounter.this,
+                                    new EventTime ( startsAt ( "9m" ), happensEvery ( "1m 30s" ), notifyIn ( "10s" ) ),
+                                    cycle -> new AnnouncementData (
+                                            marker ( 2, cycle ),
+                                            "{" + player ( 2 ) + ":c(" + green + ")}",
+                                            player ( 2 ) + " to " + markerName ( 2, cycle ) + " in ten seconds",
+                                            tickSound
+                                    )
                             ),
 
                             /**
                              * Third player greens.
                              */
-                            new LoopEvent (
-                                    DhuumEncounter.this,
-                                    "green3", () -> "Third green ( " + player ( 3 ) + " )",
-                                    startsAt ( "8m 30s" ),
-                                    happensEvery ( "1m 30s" ),
-                                    notifyIn ( "10s" ),
-                                    cycle -> marker ( 3, cycle ),
-                                    cycle -> "{" + player ( 3 ) + ":c(" + green + ")}",
-                                    tickSound
+                            new Event (
+                                    "green3", () -> markers.get ( 2 ), () -> "Third green ( " + player ( 1 ) + " )", DhuumEncounter.this,
+                                    new EventTime ( startsAt ( "8m 30s" ), happensEvery ( "1m 30s" ), notifyIn ( "10s" ) ),
+                                    cycle -> new AnnouncementData (
+                                            marker ( 3, cycle ),
+                                            "{" + player ( 3 ) + ":c(" + green + ")}",
+                                            player ( 3 ) + " to " + markerName ( 3, cycle ) + " in ten seconds",
+                                            tickSound
+                                    )
                             ),
 
                             /**
                              * Boss spawn.
                              */
-                            new SingleEvent (
-                                    DhuumEncounter.this,
-                                    "boss", () -> "Boss spawn",
-                                    occursAt ( "7m 50s" ),
-                                    notifyIn ( "10s" ),
-                                    boss32,
-                                    "{Boss spawns:c(" + red + ")}",
-                                    springSound
+                            new Event (
+                                    "boss", () -> boss32, () -> "Boss spawn", DhuumEncounter.this,
+                                    new EventTime ( occursAt ( "7m 50s" ), notifyIn ( "10s" ) ),
+                                    cycle -> new AnnouncementData (
+                                            boss32,
+                                            "{Boss spawns:c(" + red + ")}",
+                                            "Boss is coming, prepare!",
+                                            springSound
+                                    )
                             ),
 
                             /**
                              * Teleports.
                              */
-                            new LoopEvent (
-                                    DhuumEncounter.this,
-                                    "teleport", () -> "Teleport AoE",
-                                    startsAt ( "7m 10s" ),
-                                    happensEvery ( "80s" ),
-                                    notifyIn ( "5s" ),
-                                    cycle -> waypoint32,
-                                    cycle -> "{Teleport:c(" + blue + ")}",
-                                    springSound
+                            new Event (
+                                    "teleport", () -> waypoint32, () -> "Teleport AoE", DhuumEncounter.this,
+                                    new EventTime ( startsAt ( "7m 10s" ), happensEvery ( "80s" ), notifyIn ( "5s" ) ),
+                                    cycle -> new AnnouncementData (
+                                            waypoint32,
+                                            "{Teleport:c(" + blue + ")}",
+                                            "Teleport in five seconds",
+                                            springSound
+                                    )
                             ),
 
                             /**
                              * Middles.
                              */
-                            new LoopEvent (
-                                    DhuumEncounter.this,
-                                    "middle", () -> "Middle AoE",
-                                    startsAt ( "6m 25s" ),
-                                    happensEvery ( "80s" ),
-                                    notifyIn ( "13s" ),
-                                    cycle -> downed32,
-                                    cycle -> "{Middle:c(" + red + ")}",
-                                    springSound
+                            new Event (
+                                    "middle", () -> downed32, () -> "Middle AoE", DhuumEncounter.this,
+                                    new EventTime ( startsAt ( "6m 25s" ), happensEvery ( "80s" ), notifyIn ( "13s" ) ),
+                                    cycle -> new AnnouncementData (
+                                            downed32,
+                                            "{Middle:c(" + red + ")}",
+                                            "Middle in ten seconds",
+                                            springSound
+                                    )
                             ),
 
                             /**
                              * Enrage.
                              */
-                            new SingleEvent (
-                                    DhuumEncounter.this,
-                                    "enrage", () -> "Boss enrage",
-                                    occursAt ( "0s" ),
-                                    notifyIn ( "10s" ),
-                                    enrage32,
-                                    "{Enrage:c(" + red + ")}",
-                                    echoedDingSound
+                            new Event (
+                                    "enrage", () -> enrage32, () -> "Boss enrage", DhuumEncounter.this,
+                                    new EventTime ( occursAt ( "0s" ), notifyIn ( "20s" ) ),
+                                    cycle -> new AnnouncementData (
+                                            enrage32,
+                                            "{Enrage:c(" + red + ")}",
+                                            "Enrage in twenty seconds!",
+                                            echoedDingSound
+                                    )
                             )
                     );
                 }
@@ -350,8 +365,8 @@ public final class DhuumEncounter extends AbstractEncounter implements Icons, Co
             {
                 final WebStyledLabel announcementView = new WebStyledLabel ( Styles.announcementLabel, WebStyledLabel.CENTER );
                 announcementView.setEnabled ( announcement.enabled () );
-                announcementView.setIcon ( announcement.icon () );
-                announcementView.setText ( TimerUnits.get ().toString ( announcement.time () ) + ": " + announcement.text () );
+                announcementView.setIcon ( announcement.data ().icon () );
+                announcementView.setText ( TimerUnits.get ().toString ( announcement.time () ) + ": " + announcement.data ().text () );
                 announcementView.onMousePress ( MouseButton.left, e -> {
                     announcementView.setEnabled ( !announcementView.isEnabled () );
                     announcement.setEnabled ( announcementView.isEnabled () );
@@ -382,6 +397,19 @@ public final class DhuumEncounter extends AbstractEncounter implements Icons, Co
     {
         final int index = ( ( number - 1 ) + ( 3 * cycle ) ) % markers.size ();
         return markers.get ( index );
+    }
+
+    /**
+     * Returns marker name for the specified green player and event cycle.
+     *
+     * @param number green player number (between 1 and 3)
+     * @param cycle  green event cycle
+     * @return marker name for the specified green player and event cycle
+     */
+    private String markerName ( final int number, final int cycle )
+    {
+        final int index = ( ( number - 1 ) + ( 3 * cycle ) ) % markerNames.size ();
+        return markerNames.get ( index );
     }
 
     /**

@@ -2,11 +2,11 @@ package com.event.timer.data.announcement;
 
 import com.alee.managers.settings.SettingsManager;
 import com.event.timer.data.encounter.Encounter;
+import com.event.timer.data.event.AnnouncementData;
 import com.event.timer.data.event.Event;
 import com.event.timer.data.notification.NotificationSettings;
 import com.event.timer.style.format.TimerUnits;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,47 +29,28 @@ public final class Announcement
     private final long time;
 
     /**
-     * {@link Announcement} icon.
-     */
-    private final Icon icon;
-
-    /**
-     * {@link Announcement} text.
-     */
-    private final String text;
-
-    /**
      * {@link Event} for which this specific {@link Announcement} exists.
      */
     private final Event event;
 
     /**
-     * Constructs new {@link Announcement}.
-     *
-     * @param time  exact {@link Announcement} time
-     * @param text  {@link Announcement} text
-     * @param event {@link Event} for which this specific {@link Announcement} exists
+     * {@link AnnouncementData} containing detailed information about occurred {@link Event} cycle.
      */
-    public Announcement ( final long time, final String text, final Event event )
-    {
-        this ( time, null, text, event );
-    }
+    private final AnnouncementData data;
 
     /**
      * Constructs new {@link Announcement}.
      *
      * @param time  exact {@link Announcement} time
-     * @param icon  {@link Announcement} icon
-     * @param text  {@link Announcement} text
      * @param event {@link Event} for which this specific {@link Announcement} exists
+     * @param data  {@link AnnouncementData} containing detailed information about occurred {@link Event} cycle
      */
-    public Announcement ( final long time, final Icon icon, final String text, final Event event )
+    public Announcement ( final long time, final Event event, final AnnouncementData data )
     {
         super ();
         this.time = time;
-        this.icon = icon;
-        this.text = text;
         this.event = event;
+        this.data = data;
     }
 
     /**
@@ -94,23 +75,23 @@ public final class Announcement
     }
 
     /**
-     * Returns {@link Announcement} icon.
+     * Returns {@link Event} for which this specific {@link Announcement} exists.
      *
-     * @return {@link Announcement} icon
+     * @return {@link Event} for which this specific {@link Announcement} exists
      */
-    public Icon icon ()
+    public Event event ()
     {
-        return icon;
+        return event;
     }
 
     /**
-     * Returns {@link Announcement} text.
+     * Returns {@link AnnouncementData} containing detailed information about occurred {@link Event} cycle.
      *
-     * @return {@link Announcement} text
+     * @return {@link AnnouncementData} containing detailed information about occurred {@link Event} cycle
      */
-    public String text ()
+    public AnnouncementData data ()
     {
-        return text;
+        return data;
     }
 
     /**
@@ -129,28 +110,18 @@ public final class Announcement
         /**
          * Announcement text.
          */
-        final String infoText = text ();
+        final String infoText = data ().text ();
 
         /**
          * Time left until announcement.
          */
-        final long advance = event ().advance ();
+        final long advance = event ().time ().advance ();
         final String advanceText = 1000 <= timeLeft && timeLeft <= advance ? " (" + TimerUnits.get ().toString ( timeLeft ) + ")" : "";
 
         /**
          * Returning resulting text.
          */
         return exactTimeText + ": " + infoText + advanceText;
-    }
-
-    /**
-     * Returns {@link Event} for which this specific {@link Announcement} exists.
-     *
-     * @return {@link Event} for which this specific {@link Announcement} exists
-     */
-    public Event event ()
-    {
-        return event;
     }
 
     /**

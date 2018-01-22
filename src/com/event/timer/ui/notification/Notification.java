@@ -98,7 +98,7 @@ public final class Notification extends WebPopup<Notification> implements Runnab
         }
         else
         {
-            notificationLabel = new WebStyledLabel ( Styles.announcementLabel, "", announcement.icon () );
+            notificationLabel = new WebStyledLabel ( Styles.announcementLabel, "", announcement.data ().icon () );
         }
         add ( notificationLabel );
 
@@ -132,7 +132,7 @@ public final class Notification extends WebPopup<Notification> implements Runnab
     @Override
     public void run ()
     {
-        timeLeft = timeLeft == -1 ? announcement.event ().advance () : timeLeft - 1000L;
+        timeLeft = timeLeft == -1 ? announcement.event ().time ().advance () : timeLeft - 1000L;
         final String text = announcement.text ( timeLeft );
         SwingUtils.invokeLater ( () -> notificationLabel.setText ( text ) );
         pack ();
