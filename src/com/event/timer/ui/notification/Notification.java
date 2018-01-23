@@ -12,6 +12,7 @@ import com.event.timer.style.icons.Icons;
 import com.event.timer.style.skin.Styles;
 import com.event.timer.ui.behavior.CtrlMoveBehavior;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -125,22 +126,57 @@ public final class Notification extends WebPopup<Notification> implements Runnab
         }
         else
         {
-            onMousePress ( e -> hidePopup () );
+            onMousePress ( e -> {
+                if ( !SwingUtils.isCtrl ( e ) )
+                {
+                    hidePopup ();
+                }
+            } );
         }
     }
 
     @Override
     public void run ()
     {
-        timeLeft = timeLeft == -1 ? announcement.event ().time ().advance () : timeLeft - 1000L;
-        final String text = announcement.text ( timeLeft );
-        SwingUtils.invokeLater ( () -> notificationLabel.setText ( text ) );
-        pack ();
-
         if ( timeLeft <= 0 )
         {
+            /**
+             * Hiding popup when time is out.
+             */
             SwingUtils.invokeLater ( Notification.this::hidePopup );
         }
+        else
+        {
+            /**
+             * Decreasing time left.
+             */
+            timeLeft = timeLeft - 1000L;
+
+            /**
+             * Updating displayed text.
+             */
+            SwingUtils.invokeLater ( this::updateText );
+        }
+    }
+
+    /**
+     * Updates notification text.
+     */
+    private void updateText ()
+    {
+        /**
+         * Updating label.
+         */
+        final String text = announcement.text ( timeLeft );
+        notificationLabel.setText ( text );
+
+        /**
+         * Updating popup position.
+         */
+        final JWindow window = getWindow ();
+        final Rectangle bounds = window.getBounds ();
+        final Dimension ps = window.getPreferredSize ();
+        window.setBounds ( bounds.x + bounds.width / 2 - ps.width / 2, bounds.y + bounds.height / 2 - ps.height / 2, ps.width, ps.height );
     }
 
     /**
@@ -156,6 +192,7 @@ public final class Notification extends WebPopup<Notification> implements Runnab
              */
             if ( announcement != null )
             {
+                timeLeft = announcement.event ().time ().advance ();
                 timer = new Timer ( "NotificationTimer @ " + announcement.id (), true );
                 timer.schedule ( new TimerTask ()
                 {

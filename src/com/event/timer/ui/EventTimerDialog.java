@@ -432,13 +432,17 @@ public final class EventTimerDialog extends WebDialog<EventTimerDialog> implemen
                     /**
                      * Sound notification.
                      */
+                    if ( SettingsManager.get ( "SoundAnnouncements", false ) )
+                    {
+                        activatedAnnounce.data ().sound ().play ();
+                    }
+
+                    /**
+                     * Verbal notification.
+                     */
                     if ( SettingsManager.get ( "VerbalAnnouncements", true ) )
                     {
                         new SpeechSoundEffect ( activatedAnnounce.data ().speech () ).play ();
-                    }
-                    else
-                    {
-                        activatedAnnounce.data ().sound ().play ();
                     }
                 }
 

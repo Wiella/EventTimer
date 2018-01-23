@@ -237,14 +237,18 @@ public abstract class SettingsDialog extends WebDialog<SettingsDialog> implement
         content.add ( createPartsSeparator () );
 
         /**
-         * Announcements to speech.
+         * Announcement settings.
          */
+
+        final WebCheckBox enableSound = new WebCheckBox ( Styles.customizedCheckBox, "Enable sound announcements" );
+        enableSound.registerSettings ( "SoundAnnouncements", false );
+        content.add ( enableSound );
 
         final WebCheckBox enableSpeech = new WebCheckBox ( Styles.customizedCheckBox, "Enable verbal announcements" );
         enableSpeech.registerSettings ( "VerbalAnnouncements", true );
         content.add ( enableSpeech );
 
-        final WebLabel languageLabel = new WebLabel ( StyleId.labelShadow, "Choose speaker:" );
+        final WebLabel languageLabel = new WebLabel ( StyleId.labelShadow, "Speaker voice:" );
         final WebComboBox languageChooser = new WebComboBox ( new String[]{ "en", "ja", "fr" } );
         languageChooser.setRenderer ( new WebComboBoxRenderer ()
         {

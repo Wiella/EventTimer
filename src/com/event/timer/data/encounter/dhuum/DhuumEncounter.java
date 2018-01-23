@@ -1,7 +1,6 @@
 package com.event.timer.data.encounter.dhuum;
 
 import com.alee.extended.label.WebStyledLabel;
-import com.alee.extended.layout.FormLayout;
 import com.alee.extended.layout.VerticalFlowLayout;
 import com.alee.extended.panel.GroupPanel;
 import com.alee.extended.panel.GroupingType;
@@ -229,7 +228,8 @@ public final class DhuumEncounter extends AbstractEncounter implements Icons, Co
     @Override
     public JComponent settings ()
     {
-        final WebPanel settings = new WebPanel ( StyleId.panelTransparent, new FormLayout ( false, true, 5, 5 ) );
+        final VerticalFlowLayout settingsLayout = new VerticalFlowLayout ( VerticalFlowLayout.TOP, 5, 5, true, true );
+        final WebPanel settings = new WebPanel ( StyleId.panelTransparent, settingsLayout );
         createGreenPlayersSettings ( settings );
         createFeedSettings ( settings );
         return settings;
@@ -243,7 +243,6 @@ public final class DhuumEncounter extends AbstractEncounter implements Icons, Co
     private void createGreenPlayersSettings ( final WebPanel settings )
     {
         final WebLabel greensTitle = new WebLabel ( StyleId.labelShadow, "Greens:" );
-        settings.add ( greensTitle );
 
         final WebTextField green1 = new WebTextField ();
         green1.setHorizontalAlignment ( WebTextField.CENTER );
@@ -272,7 +271,8 @@ public final class DhuumEncounter extends AbstractEncounter implements Icons, Co
             updateAnnouncementsFeed.run ();
         } ) );
 
-        settings.add ( new GroupPanel ( GroupingType.fillAll, 5, true, green1, green2, green3 ) );
+        final GroupPanel greens = new GroupPanel ( GroupingType.fillAll, 5, true, green1, green2, green3 );
+        settings.add ( new GroupPanel ( GroupingType.fillLast, 5, true, greensTitle, greens ) );
     }
 
     /**
@@ -292,15 +292,17 @@ public final class DhuumEncounter extends AbstractEncounter implements Icons, Co
         final WebStyledLabel feedTitle = new WebStyledLabel ( StyleId.styledlabelShadow, "Customize feed:" );
 
         final WebToggleButton eventsToggle = new WebToggleButton ( Styles.greenTabToggleButton, "Events", true );
+        eventsToggle.setCursor ( Cursor.getPredefinedCursor ( Cursor.HAND_CURSOR ) );
         eventsToggle.addActionListener ( e -> layout.show ( feedContent, "events" ) );
         group.add ( eventsToggle );
 
         final WebToggleButton announcementsToggle = new WebToggleButton ( Styles.greenTabToggleButton, "Announcements" );
+        announcementsToggle.setCursor ( Cursor.getPredefinedCursor ( Cursor.HAND_CURSOR ) );
         announcementsToggle.addActionListener ( e -> layout.show ( feedContent, "announcements" ) );
         group.add ( announcementsToggle );
 
-        settings.add ( new GroupPanel ( GroupingType.fillFirst, 5, true, feedTitle, eventsToggle, announcementsToggle ), FormLayout.LINE );
-        settings.add ( feedContent, FormLayout.LINE );
+        settings.add ( new GroupPanel ( GroupingType.fillFirst, 5, true, feedTitle, eventsToggle, announcementsToggle ) );
+        settings.add ( feedContent );
     }
 
     /**
