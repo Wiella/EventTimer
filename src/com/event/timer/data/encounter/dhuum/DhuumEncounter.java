@@ -133,7 +133,7 @@ public final class DhuumEncounter extends AbstractEncounter implements Icons, Co
                              * Second player greens.
                              */
                             new Event (
-                                    "green2", () -> markers.get ( 1 ), () -> "Second green ( " + player ( 1 ) + " )", DhuumEncounter.this,
+                                    "green2", () -> markers.get ( 1 ), () -> "Second green ( " + player ( 2 ) + " )", DhuumEncounter.this,
                                     new EventTime ( startsAt ( "9m" ), happensEvery ( "1m 30s" ), notifyIn ( "10s" ) ),
                                     cycle -> new AnnouncementData (
                                             marker ( 2, cycle ),
@@ -147,7 +147,7 @@ public final class DhuumEncounter extends AbstractEncounter implements Icons, Co
                              * Third player greens.
                              */
                             new Event (
-                                    "green3", () -> markers.get ( 2 ), () -> "Third green ( " + player ( 1 ) + " )", DhuumEncounter.this,
+                                    "green3", () -> markers.get ( 2 ), () -> "Third green ( " + player ( 3 ) + " )", DhuumEncounter.this,
                                     new EventTime ( startsAt ( "8m 30s" ), happensEvery ( "1m 30s" ), notifyIn ( "10s" ) ),
                                     cycle -> new AnnouncementData (
                                             marker ( 3, cycle ),
